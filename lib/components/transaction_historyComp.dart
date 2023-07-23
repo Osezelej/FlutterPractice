@@ -21,7 +21,7 @@ class TransactionHistoryItem extends StatelessWidget {
         : Icon(
             Icons.arrow_upward_outlined,
             size: 25,
-            color: Colors.green,
+            color: Color.fromARGB(255, 0, 255, 0),
           );
     return Column(
       children: [
@@ -30,11 +30,12 @@ class TransactionHistoryItem extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           title: Text('$amount'),
           titleAlignment: ListTileTitleAlignment.center,
-          subtitle: Text('$date-$time'),
+          subtitle: Text('$date'),
+          trailing: Text('$time'),
           leading: icon,
           style: ListTileStyle.list,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: 0.0),
       ],
     );
   }

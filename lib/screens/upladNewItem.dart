@@ -27,7 +27,6 @@ class _UploadProductState extends State<UploadProduct> {
             color: Colors.black,
           ),
         ),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),

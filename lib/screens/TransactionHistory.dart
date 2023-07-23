@@ -137,6 +137,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       leading: Icon(Icons.chat_bubble_rounded),
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       text: 'Negotiations',
+                      url: '/Negotiation',
                     ),
                     DrawerItem(
                       leading: Icon(Icons.pending),
