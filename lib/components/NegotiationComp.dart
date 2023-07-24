@@ -27,20 +27,21 @@ class _NegotiationCompState extends State<NegotiationComp> {
       });
     }
 
-    return Container(
+    return AnimatedContainer(
+      height: 230,
+      duration: Duration(milliseconds: 30),
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 0.5, color: borderColor),
-          boxShadow: [
-            BoxShadow(
-                color: borderColor,
-                blurRadius: 10.0,
-                spreadRadius: 1.0,
-                blurStyle: BlurStyle.outer),
-          ]),
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(10), boxShadow: [
+        BoxShadow(
+            color: borderColor,
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            blurStyle: BlurStyle.outer),
+      ]),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           GestureDetector(
             onTap: () {
@@ -59,9 +60,8 @@ class _NegotiationCompState extends State<NegotiationComp> {
             },
             child: Image.network(
               widget.image ?? '',
-              height: 200,
-              width: 400,
-              fit: BoxFit.fitWidth,
+              height: 146,
+              fit: BoxFit.fill,
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [

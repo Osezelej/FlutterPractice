@@ -1,3 +1,4 @@
+import 'package:agric_fresh_app/screens/EditProduct.dart';
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/screens/TransactionHistory.dart';
 import 'package:agric_fresh_app/screens/upladNewItem.dart';
@@ -6,6 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:agric_fresh_app/screens/Negotiation.dart';
 import 'package:agric_fresh_app/screens/SingleNegotiation.dart';
 import 'package:agric_fresh_app/screens/Chat.dart';
+import 'package:agric_fresh_app/screens/product.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -36,6 +38,16 @@ void main() {
           return PageTransition(
               child: const Chat(),
               type: PageTransitionType.rightToLeft,
+              settings: settings);
+        case '/uploadedProduct':
+          return PageTransition(
+              child: const Product(),
+              type: PageTransitionType.rightToLeft,
+              settings: settings);
+        case '/editProduct':
+          return PageTransition(
+              child: const ProductDetails(),
+              type: PageTransitionType.bottomToTop,
               settings: settings);
         default:
           return null;

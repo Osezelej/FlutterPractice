@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -26,14 +27,16 @@ class _ChatState extends State<Chat> {
       'status': 'sent'
     }
   ];
-
   @override
   Widget build(BuildContext context) {
+    Map? data = ModalRoute.of(context)!.settings.arguments as Map ??
+        {'name': '', 'iconImage': ''};
+
     return Scaffold(
         appBar: AppBar(
             centerTitle: false,
             backgroundColor: Colors.white,
-            foregroundColor: Color.fromRGBO(255, 175, 74, 1),
+            foregroundColor: Color.fromARGB(255, 164, 148, 130),
             title: Row(
               children: [
                 Container(
@@ -43,11 +46,12 @@ class _ChatState extends State<Chat> {
                     color: const Color.fromARGB(255, 255, 175, 75),
                   ),
                   child: CircleAvatar(
+                    radius: 15,
                     backgroundColor: Colors.white,
-                    child: const Text(
-                      'OJ',
+                    child: Text(
+                      data['data']['iconImage'] ?? '',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
@@ -55,51 +59,53 @@ class _ChatState extends State<Chat> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  'Osezele Joseph',
-                  style: TextStyle(
+                Text(
+                  data['data']['name'] ?? '',
+                  style: const TextStyle(
                       color: Colors.black,
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.w700),
                 ),
               ],
             )),
-        body: Stack(
-          children: [
-            ListView.builder(
-                key: _listkey,
-                controller: _controller,
-                itemCount: chatdata.length,
-                itemBuilder: (context, index) {
-                  if (chatdata.elementAt(index)['status'] == 'sent') {
-                    return Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 32, 140, 36),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Text(chatdata.elementAt(index)['message']),
-                    );
-                  } else {
-                    return Container(
-                      constraints: const BoxConstraints(
-                        minWidth: 120.0,
-                        maxWidth: 250,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 255, 175, 54),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Text(chatdata.elementAt(index)['message']),
-                    );
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: [
+              ListView.builder(
+                itemBuilder: ((context, index) {
+                  switch (chatdata[index]['status']) {
+                    case 'sent':
+                      return BubbleSpecialOne(
+                        text: chatdata[index]['message'],
+                        tail: true,
+                        color: const Color.fromARGB(255, 255, 175, 74),
+                        delivered: true,
+                        seen: true,
+                      );
+                    case 'recieved':
+                      return BubbleSpecialOne(
+                          text: chatdata[index]['message'],
+                          tail: true,
+                          isSender: false,
+                          color: Color.fromARGB(255, 210, 210, 210));
                   }
-                })
-          ],
+                }),
+                itemCount: chatdata.length,
+                controller: _controller,
+                key: _listkey,
+              ),
+              MessageBar(
+                sendButtonColor: Color.fromARGB(255, 255, 175, 74),
+                onSend: (data) {
+                  setState(() {
+                    chatdata.add(
+                        {'status': 'sent', 'message': data, 'time': '8:20am'});
+                  });
+                },
+              )
+            ],
+          ),
         ));
   }
 }

@@ -38,7 +38,10 @@ class SingleNegotiationComp extends StatelessWidget {
           context,
           '/singleChat',
           arguments: {
-            'data': {'name': name},
+            'data': {
+              'name': name,
+              'iconImage': namePrefix.toUpperCase(),
+            },
           },
         );
       },

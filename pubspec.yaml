@@ -31,7 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   dotted_border:
-
+  page_transition: "^2.0.9"
+  flutter_randomcolor: "^1.0.14"
+  chat_bubbles: "^1.4.1"
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -39,8 +42,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  page_transition: "^2.0.9"
-  flutter_randomcolor: "^1.0.14"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

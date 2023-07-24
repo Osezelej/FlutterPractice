@@ -29,20 +29,36 @@ class _ProductChatState extends State<ProductChat>
       'message': 'i have seen it'
     },
     {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
+    {'name': 'Ebosetale Sarah', 'time': '7:50am', 'message': 'i have seen it'},
+    {
+      'name': 'Omonivie Precious',
+      'time': '7:50am',
+      'message': 'i have seen it'
+    },
+    {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
+    {'name': 'Ebosetale Sarah', 'time': '7:50am', 'message': 'i have seen it'},
+    {
+      'name': 'Omonivie Precious',
+      'time': '7:50am',
+      'message': 'i have seen it'
+    },
+    {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
   ];
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       for (var element in itemCount) {
         data_.add(SingleNegotiationComp(
             key: UniqueKey(),
             name: element['name'],
             lastMessage: element['message'],
             time: element['time']));
+
         _listkey.currentState!.insertItem(data_.length - 1,
-            duration: const Duration(milliseconds: 5000));
+            duration: const Duration(milliseconds: 300));
+        await Future.delayed(Duration(milliseconds: 100));
       }
     });
   }
@@ -53,13 +69,13 @@ class _ProductChatState extends State<ProductChat>
   );
   @override
   Widget build(BuildContext context) {
-    Map? data = ModalRoute.of(context)!.settings.arguments as Map ??
-        {'productName': '', 'productImage': ''};
+    Map? data = ModalRoute.of(context)!.settings.arguments as Map;
     print(data);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            pinned: true,
             backgroundColor: Colors.white,
             title: Container(
               padding:
@@ -67,8 +83,8 @@ class _ProductChatState extends State<ProductChat>
               child: Text(
                 data['data']['productName'] ?? '',
                 style: const TextStyle(
-                    color: Color.fromARGB(221, 173, 152, 152),
-                    fontWeight: FontWeight.bold),
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
               ),
             ),
             centerTitle: false,

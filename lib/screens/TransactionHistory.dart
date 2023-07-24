@@ -145,10 +145,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       text: 'Pending uploads',
                     ),
                     DrawerItem(
-                      leading: Icon(Icons.shopping_bag),
-                      trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      text: 'Products',
-                    ),
+                        leading: Icon(Icons.shopping_bag),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded),
+                        text: 'Products',
+                        url: '/uploadedProduct'),
                   ],
                 ),
                 Column(
