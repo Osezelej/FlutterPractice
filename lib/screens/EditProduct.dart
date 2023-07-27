@@ -31,6 +31,22 @@ class _ProductDetailsState extends State<ProductDetails> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Map? data = ModalRoute.of(context)!.settings.arguments as Map;
+    
+    _price = data['data']['productPrice'];
+    _product_name = data['data']['productName'];
+    _value = data['data']['productDescription'];
+
+    if (displayed == 0) {
+      persistentProductDescription = data['data']['productDescription'];
+      persistentProductName = data['data']['productName'];
+      persistentProductPrice = data['data']['productPrice'];
       _animatedWidget = Container(
         key: GlobalKey(),
         padding: EdgeInsets.all(5),
@@ -73,23 +89,8 @@ class _ProductDetailsState extends State<ProductDetails> {
               fontWeight: FontWeight.w900),
         ),
       );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Map? data = ModalRoute.of(context)!.settings.arguments as Map;
-
-    if (displayed == 0) {
-      persistentProductDescription = data['data']['productDescription'];
-      persistentProductName = data['data']['productName'];
-      persistentProductPrice = data['data']['productPrice'];
     }
     displayed++;
-    _price = data['data']['productPrice'];
-    _product_name = data['data']['productName'];
-    _value = data['data']['productDescription'];
-
     print(_value);
     print(_price);
     print(_product_name);

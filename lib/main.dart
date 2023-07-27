@@ -1,4 +1,5 @@
 import 'package:agric_fresh_app/screens/EditProduct.dart';
+import 'package:agric_fresh_app/screens/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/screens/TransactionHistory.dart';
 import 'package:agric_fresh_app/screens/upladNewItem.dart';
@@ -47,6 +48,11 @@ void main() {
         case '/editProduct':
           return PageTransition(
               child: const ProductDetails(),
+              type: PageTransitionType.bottomToTop,
+              settings: settings);
+        case '/withdraw':
+          return PageTransition(
+              child: const Widthdraw(),
               type: PageTransitionType.bottomToTop,
               settings: settings);
         default:
