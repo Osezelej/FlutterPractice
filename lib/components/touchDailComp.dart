@@ -11,8 +11,8 @@ class TouchDailItem extends StatefulWidget {
 }
 
 class _TouchDailItemState extends State<TouchDailItem> {
-  Color _fontColor = const Color.fromARGB(255, 79, 79, 79);
-  Widget animatedWidget = Placeholder();
+  final Color _fontColor = const Color.fromARGB(255, 79, 79, 79);
+  Widget animatedWidget = const Placeholder();
   int i = 0;
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _TouchDailItemState extends State<TouchDailItem> {
             animatedWidget = Container(
               key: const ValueKey('second'),
               height: 70,
-              color: Color.fromARGB(255, 255, 175, 75),
+              color: const Color.fromARGB(255, 255, 175, 75),
               child: Center(
                 child: Text(
                   e,
@@ -57,12 +57,12 @@ class _TouchDailItemState extends State<TouchDailItem> {
             );
           });
 
-          Future.delayed(Duration(milliseconds: 70), () {
+          Future.delayed(const Duration(milliseconds: 70), () {
             setState(() {
               animatedWidget = Container(
                 key: const ValueKey('first'),
                 height: 70,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
                 child: Center(
                   child: Text(
                     e,

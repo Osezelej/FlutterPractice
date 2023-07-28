@@ -107,6 +107,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         : const Icon(Icons.remove_red_eye);
     return Scaffold(
       drawer: Drawer(
+        backgroundColor: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
@@ -119,7 +120,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   'Art Template',
                   style: TextStyle(
                     color: Colors.grey[900],
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -148,6 +149,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       leading: Icon(Icons.pending),
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       text: 'Pending uploads',
+                      url: '/pendingUpload',
                     ),
                     DrawerItem(
                         leading: Icon(Icons.shopping_bag),
@@ -159,10 +161,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 Column(
                   children: [
                     DrawerItem(
-                      text: 'Profile',
-                      trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      leading: Icon(Icons.supervised_user_circle_rounded),
-                    ),
+                        text: 'Profile',
+                        trailing: Icon(Icons.arrow_forward_ios_rounded),
+                        leading: Icon(Icons.supervised_user_circle_rounded),
+                        url: '/profile'),
                     DrawerItem(
                       text: 'Help - Contact Us',
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
@@ -186,11 +188,12 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               pinned: true,
               snap: true,
               floating: true,
-              centerTitle: true,
+              centerTitle: false,
               title: const Text(
                 'Transactions',
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 17,
                 ),
               ),
               iconTheme: const IconThemeData(color: Color(0xffffaf36)),
@@ -323,7 +326,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         onPressed: () {},
         backgroundColor: Color.fromARGB(255, 255, 125, 54),
         elevation: 5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Icon(
           Icons.file_upload_rounded,
           weight: 50.0,

@@ -1,4 +1,6 @@
 import 'package:agric_fresh_app/screens/EditProduct.dart';
+import 'package:agric_fresh_app/screens/Profile.dart';
+import 'package:agric_fresh_app/screens/pedingUpload.dart';
 import 'package:agric_fresh_app/screens/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/screens/TransactionHistory.dart';
@@ -12,6 +14,9 @@ import 'package:agric_fresh_app/screens/product.dart';
 
 void main() {
   runApp(MaterialApp(
+    theme: ThemeData(
+      useMaterial3: true,
+    ),
     debugShowCheckedModeBanner: false,
     routes: {
       '/': (context) => const TransactionHistory(),
@@ -54,6 +59,16 @@ void main() {
           return PageTransition(
               child: const Widthdraw(),
               type: PageTransitionType.bottomToTop,
+              settings: settings);
+        case '/profile':
+          return PageTransition(
+              child: const Profile(),
+              type: PageTransitionType.fade,
+              settings: settings);
+        case '/pendingUpload':
+          return PageTransition(
+              child: const PendingUpload(),
+              type: PageTransitionType.rightToLeft,
               settings: settings);
         default:
           return null;

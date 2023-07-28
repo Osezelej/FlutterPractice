@@ -22,9 +22,10 @@ class _UploadProductState extends State<UploadProduct> {
         foregroundColor: Color.fromARGB(255, 255, 175, 54),
         backgroundColor: Colors.white,
         title: Text(
-          'Upload New Product',
+          'Upload product',
           style: TextStyle(
             color: Colors.black,
+            fontSize: 17,
           ),
         ),
       ),
@@ -82,7 +83,7 @@ class _UploadProductState extends State<UploadProduct> {
                   strokeWidth: 1.5,
                   color: Colors.grey,
                   radius: Radius.circular(5.0),
-                  child: Container(
+                  child: SizedBox(
                     height: 230,
                     child: Center(
                       child: Column(

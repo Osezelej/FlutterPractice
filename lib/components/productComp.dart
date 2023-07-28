@@ -12,7 +12,7 @@ class ProductComp extends StatefulWidget {
 }
 
 class _ProductCompState extends State<ProductComp> {
-  Color borderColor = Color.fromARGB(255, 189, 189, 189);
+  Color borderColor = const Color.fromARGB(255, 189, 189, 189);
   @override
   Widget build(BuildContext context) {
     void _handleTapDown() {
@@ -46,7 +46,7 @@ class _ProductCompState extends State<ProductComp> {
         });
       },
       child: AnimatedContainer(
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         decoration:
             BoxDecoration(borderRadius: BorderRadius.circular(10), boxShadow: [
           BoxShadow(
@@ -55,8 +55,8 @@ class _ProductCompState extends State<ProductComp> {
               spreadRadius: 1.0,
               blurStyle: BlurStyle.outer),
         ]),
-        duration: Duration(milliseconds: 300),
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         height: 230,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,14 +65,14 @@ class _ProductCompState extends State<ProductComp> {
               children: [
                 Container(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.redAccent,
                         width: 1.5,
                       ),
                       borderRadius: BorderRadius.circular(20)),
-                  child: Text(
+                  child: const Text(
                     'NUMBER SOLD',
                     style: TextStyle(
                         fontSize: 13,
@@ -80,10 +80,10 @@ class _ProductCompState extends State<ProductComp> {
                         color: Colors.redAccent),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
-                Text(
+                const Text(
                   '10',
                   style: TextStyle(
                     fontSize: 14,
@@ -92,7 +92,7 @@ class _ProductCompState extends State<ProductComp> {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Image.network(
@@ -100,7 +100,7 @@ class _ProductCompState extends State<ProductComp> {
               height: 145,
               fit: BoxFit.fill,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
@@ -117,13 +117,12 @@ class _ProductCompState extends State<ProductComp> {
                     color: Colors.redAccent),
               )
             ]),
-            SizedBox(
+            const SizedBox(
               height: 10,
             )
           ],
         ),
       ),
     );
-    ;
   }
 }

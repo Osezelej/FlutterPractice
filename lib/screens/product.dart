@@ -17,8 +17,11 @@ class _ProductState extends State<Product> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Uploaded Product',
-            style: TextStyle(color: Colors.black),
+            'Uploaded product',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+            ),
           ),
           backgroundColor: Colors.white,
           foregroundColor: Color.fromARGB(255, 255, 175, 54),

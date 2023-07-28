@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/components/singleNegotiaitonComp.dart';
 
@@ -58,7 +56,7 @@ class _ProductChatState extends State<ProductChat>
 
         _listkey.currentState!.insertItem(data_.length - 1,
             duration: const Duration(milliseconds: 300));
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
       }
     });
   }
@@ -84,11 +82,12 @@ class _ProductChatState extends State<ProductChat>
                 data['data']['productName'] ?? '',
                 style: const TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 17,
                 ),
               ),
             ),
             centerTitle: false,
-            foregroundColor: Color.fromARGB(255, 255, 175, 54),
+            foregroundColor: const Color.fromARGB(255, 255, 175, 54),
             elevation: 10.0,
             shadowColor: Colors.grey[200],
             expandedHeight: 240,

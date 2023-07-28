@@ -4,14 +4,16 @@ class NegotiationComp extends StatefulWidget {
   final String? image;
   final String? pName;
   final String? pPrice;
-  const NegotiationComp({super.key, this.image, this.pName, this.pPrice});
+  final String? from;
+  const NegotiationComp(
+      {super.key, this.image, this.pName, this.pPrice, this.from});
 
   @override
   State<NegotiationComp> createState() => _NegotiationCompState();
 }
 
 class _NegotiationCompState extends State<NegotiationComp> {
-  Color borderColor = Color.fromARGB(255, 189, 189, 189);
+  Color borderColor = const Color.fromARGB(255, 189, 189, 189);
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,9 @@ class _NegotiationCompState extends State<NegotiationComp> {
 
     return AnimatedContainer(
       height: 230,
-      duration: Duration(milliseconds: 30),
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      duration: const Duration(milliseconds: 30),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10), boxShadow: [
         BoxShadow(
@@ -49,8 +51,20 @@ class _NegotiationCompState extends State<NegotiationComp> {
                 'productName': widget.pName,
                 'productImage': widget.image
               };
-              Navigator.pushNamed(context, '/product-chat',
-                  arguments: {'data': data});
+              if (widget.from == 'negotiation') {
+                Navigator.pushNamed(context, '/product-chat',
+                    arguments: {'data': data});
+              } else if (widget.from == 'pending') {
+                Navigator.pushNamed(context, '/editProduct', arguments: {
+                  'data': {
+                    'productPrice': '${widget.pPrice}',
+                    'productName': '${widget.pName}',
+                    'productImage': '${widget.image}',
+                    'productDescription':
+                        'this is a description that will tell you how nicen the product are and they are very nice. the thimg is just that i am not a very happy person i always look for something that makes me sad and i dont know why that is i hope that this ends soon i love you all',
+                  }
+                });
+              }
             },
             onTapDown: (details) {
               handleTapDown();

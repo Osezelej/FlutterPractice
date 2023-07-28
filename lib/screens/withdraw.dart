@@ -4,6 +4,7 @@ import 'package:agric_fresh_app/components/touchDailComp.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Widthdraw extends StatefulWidget {
   const Widthdraw({super.key});
@@ -333,6 +334,90 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
       });
     }
 
+    void successful() {
+      showCupertinoModalPopup(
+          context: context,
+          builder: (context) {
+            return Card(
+                child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 20,
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'checked.png',
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.fill,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Withdrawal logged successfully')
+                      ],
+                    )));
+          });
+    }
+
+    void verifybottomModal() {
+      String _text = 'Verifying User';
+      int i = 0;
+      Future ft = Future(() {});
+
+      showCupertinoModalPopup(
+        context: context,
+        builder: ((context) {
+          return StatefulBuilder(
+            builder: (context, modalsetState) {
+              ft.then((value) async {
+                await Future.delayed(Duration(milliseconds: 2000), () {
+                  modalsetState(() {
+                    _text = 'Verifying Amount';
+                  });
+                });
+                await Future.delayed(Duration(milliseconds: 3000), () {
+                  modalsetState(() {
+                    _text = 'Verifying Transaction';
+                  });
+                });
+                await Future.delayed(Duration(milliseconds: 2000), () {
+                  Navigator.of(context).pop();
+                });
+                await Future.delayed(Duration(milliseconds: 500), () {
+                  successful();
+                });
+              });
+
+              return Card(
+                child: Container(
+                  height: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 25),
+                    child: Row(
+                      children: [
+                        SpinKitRing(
+                          color: Color.fromARGB(255, 255, 175, 75),
+                          lineWidth: 5,
+                          size: 40,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(_text)
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        }),
+      );
+    }
+
     void addFunction(String e, BuildContext context, StateSetter modalsetState,
         String from) async {
       if (value.length < 4) {
@@ -427,8 +512,13 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                             textInputAction: TextInputAction.done,
                             onEditingComplete: () {
                               print('completed');
-                              Future.delayed(Duration(milliseconds: 300), () {
+                              Future.delayed(Duration(milliseconds: 300),
+                                  () async {
                                 Navigator.of(context).pop();
+                                await Future.delayed(
+                                    Duration(milliseconds: 300), () {
+                                  verifybottomModal();
+                                });
                               });
                             },
                             keyboardType: TextInputType.number,
@@ -632,189 +722,190 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
     }
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
+        body: CustomScrollView(
+      slivers: [
+        SliverAppBar(
           title: const Text(
             'Withdrawal',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+            ),
           ),
           centerTitle: false,
           backgroundColor: Colors.white,
           elevation: 5,
           foregroundColor: Color.fromARGB(255, 255, 175, 74),
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverList(
-                delegate: SliverChildListDelegate([
-              Container(
-                height: 210,
-                color: Colors.white,
+        SliverList(
+            delegate: SliverChildListDelegate([
+          Container(
+            height: 210,
+            color: Colors.white,
+            child: Container(
+              margin: EdgeInsets.all(15),
+              child: DottedBorder(
+                strokeWidth: 0.5,
+                color: Color.fromARGB(100, 255, 175, 75),
+                dashPattern: [16, 7],
+                radius: Radius.circular(15),
                 child: Container(
-                  margin: EdgeInsets.all(15),
-                  child: DottedBorder(
-                    strokeWidth: 0.5,
-                    color: Color.fromARGB(100, 255, 175, 75),
-                    dashPattern: [16, 7],
-                    radius: Radius.circular(15),
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: SingleChildScrollView(
-                        child: Stack(
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Account Number',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 3,
-                                ),
-                                AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: _animatedAcctNumber),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Account Name',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 3,
-                                ),
-                                AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: _animatedAcctName),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Bank Name',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 3,
-                                ),
-                                AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 300),
-                                    child: _animatedBankName),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ],
+                            SizedBox(
+                              height: 10,
                             ),
-                            Positioned(
-                              top: -2,
-                              right: -2,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.edit_rounded,
-                                  color: Color.fromARGB(255, 255, 175, 75),
-                                  size: 19,
-                                ),
-                                onPressed: () async {
-                                  showmodal('editwallet');
-                                },
+                            Text(
+                              'Account Number',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
                               ),
-                            )
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: _animatedAcctNumber),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Account Name',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: _animatedAcctName),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Bank Name',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: _animatedBankName),
+                            SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
-                      ),
+                        Positioned(
+                          top: -2,
+                          right: -2,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.edit_rounded,
+                              color: Color.fromARGB(255, 255, 175, 75),
+                              size: 19,
+                            ),
+                            onPressed: () async {
+                              showmodal('editwallet');
+                            },
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            child: TextButton.icon(
+              onPressed: () {
+                showmodal('withdraw');
+              },
+              icon: Icon(
+                Icons.wallet_rounded,
+                size: 21,
+                color: Colors.black,
+              ),
+              label: Container(
+                margin: EdgeInsets.symmetric(vertical: 15),
+                child: Text(
+                  'Withdraw',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      Color.fromARGB(255, 255, 175, 74)),
+                  elevation: MaterialStatePropertyAll(10)),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 15,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: TextButton.icon(
-                  onPressed: () {
-                    showmodal('withdraw');
-                  },
-                  icon: Icon(
-                    Icons.wallet_rounded,
-                    size: 21,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                color: Colors.white,
+                child: Text(
+                  'Withdrawals',
+                  style: TextStyle(
                     color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
                   ),
-                  label: Container(
-                    margin: EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      'Withdraw',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                          Color.fromARGB(255, 255, 175, 74)),
-                      elevation: MaterialStatePropertyAll(10)),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    color: Colors.white,
-                    child: Text(
-                      'Withdrawals',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+              SizedBox(
+                height: 10,
               ),
-            ])),
-            SliverAnimatedList(
-                key: _key,
-                initialItemCount: data.length,
-                itemBuilder: (context, index, animation) {
-                  return SlideTransition(
-                      position: animation.drive(
-                        Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(data[index]['amount']),
-                          trailing: Text(data[index]['time']),
-                          subtitle: Text(data[index]['date']),
-                        ),
-                      ));
-                })
-          ],
-        ));
+            ],
+          ),
+        ])),
+        SliverAnimatedList(
+            key: _key,
+            initialItemCount: data.length,
+            itemBuilder: (context, index, animation) {
+              return SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text(data[index]['amount']),
+                      trailing: Text(data[index]['time']),
+                      subtitle: Text(data[index]['date']),
+                    ),
+                  ));
+            })
+      ],
+    ));
   }
 }

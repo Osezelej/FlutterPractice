@@ -13,6 +13,7 @@ class Negotiation extends StatelessWidget {
           'Negotiation',
           style: TextStyle(
             color: Colors.black,
+            fontSize: 17,
           ),
         ),
         backgroundColor: Colors.white,
@@ -32,6 +33,7 @@ class Negotiation extends StatelessWidget {
                         image: value['Image'],
                         pName: value['Name'],
                         pPrice: value['Price'],
+                        from: 'negotiation',
                       ),
                       const SizedBox(
                         height: 0,

@@ -30,15 +30,13 @@ class _ProductDetailsState extends State<ProductDetails> {
     // TODO: implement initState
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      
-    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
   @override
   Widget build(BuildContext context) {
     Map? data = ModalRoute.of(context)!.settings.arguments as Map;
-    
+
     _price = data['data']['productPrice'];
     _product_name = data['data']['productName'];
     _value = data['data']['productDescription'];
@@ -91,16 +89,17 @@ class _ProductDetailsState extends State<ProductDetails> {
       );
     }
     displayed++;
-    print(_value);
-    print(_price);
-    print(_product_name);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             title: Text(
-              'Edit Product',
-              style: TextStyle(color: Colors.black),
+              'Edit product',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
             ),
             pinned: true,
             floating: true,
@@ -387,7 +386,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             Color.fromARGB(255, 255, 175, 74),
                                         onPressed: () {
                                           setState(() {
-                                            _animatedWidget = Container(
+                                            _animatedWidget = SizedBox(
                                               key: GlobalKey(),
                                               width: 300,
                                               child: TextField(
@@ -504,37 +503,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                   vertical: 10,
                 ),
                 child: TextButton(
-                  onPressed: (_value.trim() ==
-                              persistentProductDescription.trim()) &&
-                          (_price.trim() == persistentProductPrice.trim()) &&
-                          (_product_name.trim() == persistentProductName.trim())
-                      ? null
-                      : () {},
+                  onPressed: () {},
                   style: ButtonStyle(
                       elevation: MaterialStatePropertyAll(5),
                       backgroundColor: MaterialStatePropertyAll(
-                          (_value.trim() ==
-                                      persistentProductDescription.trim()) &&
-                                  (_price.trim() ==
-                                      persistentProductPrice.trim()) &&
-                                  (_product_name.trim() ==
-                                      persistentProductName.trim())
-                              ? Color.fromARGB(100, 255, 175, 74)
-                              : Color.fromARGB(255, 255, 175, 75))),
+                          Color.fromARGB(255, 255, 175, 75))),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'SUBMIT',
+                      'Submit',
                       style: TextStyle(
-                        color: (_value.trim() ==
-                                    persistentProductDescription.trim()) &&
-                                (_price.trim() ==
-                                    persistentProductPrice.trim()) &&
-                                (_product_name.trim() ==
-                                    persistentProductName.trim())
-                            ? Color.fromARGB(50, 0, 0, 0)
-                            : Colors.black,
-                        fontSize: 17,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

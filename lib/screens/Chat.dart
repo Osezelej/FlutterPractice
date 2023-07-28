@@ -29,14 +29,13 @@ class _ChatState extends State<Chat> {
   ];
   @override
   Widget build(BuildContext context) {
-    Map? data = ModalRoute.of(context)!.settings.arguments as Map ??
-        {'name': '', 'iconImage': ''};
+    Map? data = ModalRoute.of(context)!.settings.arguments as Map;
 
     return Scaffold(
         appBar: AppBar(
             centerTitle: false,
             backgroundColor: Colors.white,
-            foregroundColor: Color.fromARGB(255, 164, 148, 130),
+            foregroundColor: const Color.fromARGB(255, 255, 175, 75),
             title: Row(
               children: [
                 Container(
@@ -50,7 +49,7 @@ class _ChatState extends State<Chat> {
                     backgroundColor: Colors.white,
                     child: Text(
                       data['data']['iconImage'] ?? '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
@@ -88,15 +87,16 @@ class _ChatState extends State<Chat> {
                           text: chatdata[index]['message'],
                           tail: true,
                           isSender: false,
-                          color: Color.fromARGB(255, 210, 210, 210));
+                          color: const Color.fromARGB(255, 210, 210, 210));
                   }
+                  return null;
                 }),
                 itemCount: chatdata.length,
                 controller: _controller,
                 key: _listkey,
               ),
               MessageBar(
-                sendButtonColor: Color.fromARGB(255, 255, 175, 74),
+                sendButtonColor: const Color.fromARGB(255, 255, 175, 74),
                 onSend: (data) {
                   setState(() {
                     chatdata.add(
