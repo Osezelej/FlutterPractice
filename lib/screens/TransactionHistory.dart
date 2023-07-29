@@ -169,6 +169,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       text: 'Help - Contact Us',
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       leading: Icon(Icons.help_center),
+                      url: '/help',
                     ),
                     DrawerItem(
                       text: 'Logout',

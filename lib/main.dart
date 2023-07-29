@@ -1,5 +1,6 @@
 import 'package:agric_fresh_app/screens/EditProduct.dart';
 import 'package:agric_fresh_app/screens/Profile.dart';
+import 'package:agric_fresh_app/screens/help.dart';
 import 'package:agric_fresh_app/screens/pedingUpload.dart';
 import 'package:agric_fresh_app/screens/withdraw.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,11 @@ void main() {
         case '/pendingUpload':
           return PageTransition(
               child: const PendingUpload(),
+              type: PageTransitionType.rightToLeft,
+              settings: settings);
+        case '/help':
+          return PageTransition(
+              child: const Help(),
               type: PageTransitionType.rightToLeft,
               settings: settings);
         default:

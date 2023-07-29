@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -8,8 +11,43 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Widget? _animatedFarmName;
+  Widget? _animatedFarmNunmber;
+  Widget? _animatedFarmLocation;
+  int i = 0;
+  String _initialName = 'Art Template';
+  String _initialNumber = '08076320300';
+  String _iitialAddr = '20, Along Farm Rd, AtanOta, Ogun State, Nigeria.';
   @override
   Widget build(BuildContext context) {
+    if (i == 0) {
+      _animatedFarmName = Text(
+        _initialName,
+        style: TextStyle(
+          color: Colors.grey[400],
+          fontSize: 15,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+
+      _animatedFarmNunmber = Text(
+        _initialNumber,
+        style: TextStyle(
+          color: Colors.grey[400],
+          fontSize: 15,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+      _animatedFarmLocation = Text(
+        _iitialAddr,
+        style: TextStyle(
+          color: Colors.grey[400],
+          fontSize: 15,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
+    i++;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Color.fromARGB(255, 255, 175, 75),
@@ -39,7 +77,12 @@ class _ProfileState extends State<Profile> {
                     top: 13,
                     right: 19,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        FilePickerResult? result =
+                            await FilePicker.platform.pickFiles();
+
+                        print(result?.files.single.bytes);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -68,10 +111,51 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 7,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _animatedFarmName = TextField(
+                          autofillHints: [
+                            AutofillHints.givenName,
+                            AutofillHints.username
+                          ],
+                          textCapitalization: TextCapitalization.words,
+                          autofocus: true,
+                          onChanged: (value) {
+                            _initialName = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              _animatedFarmName = Text(
+                                _initialName,
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              );
+                            });
+                          },
+                          controller: TextEditingController(text: _initialName),
+                          decoration: InputDecoration(
+                              labelText: 'Farm Name',
+                              floatingLabelStyle: TextStyle(
+                                color: Color.fromARGB(255, 255, 175, 75),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 255, 175, 75)),
+                                borderRadius: BorderRadius.circular(5),
+                              )),
+                        );
+                      });
+                    },
                     icon: Icon(
                       Icons.edit_rounded,
                       color: Color.fromARGB(255, 255, 175, 75),
@@ -79,14 +163,7 @@ class _ProfileState extends State<Profile> {
               ]),
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
-                child: Text(
-                  'Art Template',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                child: _animatedFarmName,
               ),
               SizedBox(
                 height: 10,
@@ -104,7 +181,44 @@ class _ProfileState extends State<Profile> {
                   width: 10,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _animatedFarmNunmber = TextField(
+                          autofocus: true,
+                          onChanged: (value) {
+                            _initialNumber = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              _animatedFarmNunmber = Text(
+                                _initialNumber,
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              );
+                            });
+                          },
+                          controller:
+                              TextEditingController(text: _initialNumber),
+                          decoration: InputDecoration(
+                              labelText: 'Company/phone number',
+                              floatingLabelStyle: TextStyle(
+                                color: Color.fromARGB(255, 255, 175, 75),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 255, 175, 75)),
+                                borderRadius: BorderRadius.circular(5),
+                              )),
+                        );
+                      });
+                    },
                     icon: Icon(
                       Icons.edit_rounded,
                       color: Color.fromARGB(255, 255, 175, 75),
@@ -112,14 +226,7 @@ class _ProfileState extends State<Profile> {
               ]),
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
-                child: Text(
-                  '08076320300',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                child: _animatedFarmNunmber,
               ),
               SizedBox(
                 height: 10,
@@ -137,7 +244,43 @@ class _ProfileState extends State<Profile> {
                   width: 10,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _animatedFarmLocation = TextField(
+                          autofocus: true,
+                          onChanged: (value) {
+                            _iitialAddr = value;
+                          },
+                          onEditingComplete: () {
+                            setState(() {
+                              _animatedFarmLocation = Text(
+                                _iitialAddr,
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              );
+                            });
+                          },
+                          controller: TextEditingController(text: _iitialAddr),
+                          decoration: InputDecoration(
+                              labelText: 'Farm Address',
+                              floatingLabelStyle: TextStyle(
+                                color: Color.fromARGB(255, 255, 175, 75),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 255, 175, 75)),
+                                borderRadius: BorderRadius.circular(5),
+                              )),
+                        );
+                      });
+                    },
                     icon: Icon(
                       Icons.edit_rounded,
                       color: Color.fromARGB(255, 255, 175, 75),
@@ -145,14 +288,7 @@ class _ProfileState extends State<Profile> {
               ]),
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
-                child: Text(
-                  '20, Along Farm Rd, AtanOta, Ogun State, Nigeria.',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                child: _animatedFarmLocation,
               ),
               SizedBox(
                 height: 30,
