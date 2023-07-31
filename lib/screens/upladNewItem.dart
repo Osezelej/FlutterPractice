@@ -24,9 +24,7 @@ class _UploadProductState extends State<UploadProduct> {
         title: Text(
           'Upload product',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
+              color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(

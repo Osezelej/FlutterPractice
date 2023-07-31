@@ -20,9 +20,7 @@ class _HelpState extends State<Help> {
         title: Text(
           'Help-Contact us',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
+              color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
         ),
       ),
       body: ListView(children: [
@@ -33,7 +31,7 @@ class _HelpState extends State<Help> {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage('icon.png'),
+                backgroundImage: AssetImage('assets/icon.png'),
                 radius: 45,
               ),
               SizedBox(

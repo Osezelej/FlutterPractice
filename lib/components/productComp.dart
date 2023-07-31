@@ -57,15 +57,15 @@ class _ProductCompState extends State<ProductComp> {
         ]),
         duration: const Duration(milliseconds: 300),
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        height: 230,
+        height: 235,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 3.0),
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.redAccent,

@@ -12,9 +12,7 @@ class Negotiation extends StatelessWidget {
         title: const Text(
           'Negotiation',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
+              color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
         foregroundColor: const Color(0xffffaf36),

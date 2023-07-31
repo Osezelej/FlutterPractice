@@ -850,7 +850,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                 color: Colors.black,
               ),
               label: Container(
-                margin: EdgeInsets.symmetric(vertical: 15),
+                margin: EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   'Withdraw',
                   style: TextStyle(

@@ -12,15 +12,13 @@ class PendingUpload extends StatelessWidget {
         title: Text(
           'Pending upload',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
+              color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
         ),
         foregroundColor: Color.fromARGB(255, 255, 175, 75),
         backgroundColor: Colors.white,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal:0, vertical: 10),
         child: ListView.builder(
           itemBuilder: (context, index) {
             var value = dataApi[index];

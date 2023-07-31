@@ -114,7 +114,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             children: [
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('icon.png'),
+                  backgroundImage: AssetImage('assets/icon.png'),
                 ),
                 title: Text(
                   'Art Template',
@@ -193,121 +193,129 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               title: const Text(
                 'Transactions',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 17,
-                ),
+                    color: Colors.black,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
               ),
               iconTheme: const IconThemeData(color: Color(0xffffaf36)),
               backgroundColor: Colors.white,
-              expandedHeight: 250.0,
+              expandedHeight: 240.0,
               flexibleSpace: FlexibleSpaceBar(
-                background: Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    height: 130,
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 25),
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color.fromARGB(255, 255, 175, 54),
-                          Color.fromARGB(255, 255, 175, 74),
-                          Color.fromARGB(255, 255, 175, 74),
-                          Color.fromARGB(255, 255, 175, 74),
-                          Color.fromARGB(255, 255, 175, 74),
-                          Color.fromARGB(255, 255, 255, 255),
-                        ]),
-                        borderRadius: BorderRadius.all(Radius.circular(2.3)),
-                        boxShadow: [
-                          BoxShadow(color: Colors.grey, blurRadius: 5),
-                        ]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
+                background: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Center(
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                        height: 130,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(colors: [
+                              Color.fromARGB(255, 255, 175, 54),
+                              Color.fromARGB(255, 255, 175, 74),
+                              Color.fromARGB(255, 255, 175, 74),
+                              Color.fromARGB(255, 255, 175, 74),
+                              Color.fromARGB(255, 255, 175, 74),
+                              Color.fromARGB(255, 255, 255, 255),
+                            ]),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(2.3)),
+                            boxShadow: [
+                              BoxShadow(color: Colors.grey, blurRadius: 5),
+                            ]),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  'naira.png',
-                                  width: 30,
-                                  height: 30,
-                                  cacheHeight: 30,
-                                  cacheWidth: 30,
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/naira.png',
+                                      width: 30,
+                                      height: 30,
+                                      cacheHeight: 30,
+                                      cacheWidth: 30,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    const Text(
+                                      '0.00',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w900),
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const Text(
-                                  '0.00',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w900),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Farm Name:',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Agric Fresh',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 13.5,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Email:',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13.5,
+                                          ),
+                                        ),
+                                        Text(
+                                          '2osezelejoseph@gmail.com',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 )
                               ],
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Farm Name:',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Agric Fresh',
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 13.5,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Email:',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13.5,
-                                      ),
-                                    ),
-                                    Text(
-                                      '2osezelejoseph@gmail.com',
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    iconisPressed =
+                                        iconisPressed ? false : true;
+                                  });
+                                },
+                                icon: icon)
                           ],
                         ),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                iconisPressed = iconisPressed ? false : true;
-                              });
-                            },
-                            icon: icon)
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               )),
           SliverList(
@@ -324,7 +332,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/upload product');
+        },
         backgroundColor: Color.fromARGB(255, 255, 125, 54),
         elevation: 5,
         child: Icon(

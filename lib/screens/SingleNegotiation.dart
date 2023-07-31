@@ -81,9 +81,9 @@ class _ProductChatState extends State<ProductChat>
               child: Text(
                 data['data']['productName'] ?? '',
                 style: const TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 17,
-                ),
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             centerTitle: false,

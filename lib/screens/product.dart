@@ -19,9 +19,7 @@ class _ProductState extends State<Product> {
           title: Text(
             'Uploaded product',
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-            ),
+                color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
           foregroundColor: Color.fromARGB(255, 255, 175, 54),
