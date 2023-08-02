@@ -117,7 +117,7 @@ class _ProfileState extends State<Profile> {
                       onPressed: () {
                         setState(() {
                           _animatedFarmName = TextField(
-                            autofillHints: [
+                            autofillHints: const [
                               AutofillHints.givenName,
                               AutofillHints.username
                             ],

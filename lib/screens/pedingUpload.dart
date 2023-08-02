@@ -9,16 +9,16 @@ class PendingUpload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Pending upload',
           style: TextStyle(
               color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
         ),
-        foregroundColor: Color.fromARGB(255, 255, 175, 75),
+        foregroundColor: const Color.fromARGB(255, 255, 175, 75),
         backgroundColor: Colors.white,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal:0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal:0, vertical: 10),
         child: ListView.builder(
           itemBuilder: (context, index) {
             var value = dataApi[index];

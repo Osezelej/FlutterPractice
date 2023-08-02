@@ -307,7 +307,7 @@ class _ForgotPswrdState extends State<ForgotPswrd>
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.emailAddress,
                 autofocus: true,
-                autofillHints: [AutofillHints.username],
+                autofillHints: const [AutofillHints.username],
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),

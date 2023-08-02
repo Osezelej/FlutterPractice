@@ -1,16 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
-
 import 'package:flutter/material.dart';
+import 'package:dotted_border/dotted_border.dart';
 
-class ResetPswrd extends StatefulWidget {
-  const ResetPswrd({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<ResetPswrd> createState() => _ResetPswrdState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
+class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   late AnimationController _animationController;
   Widget _firstValidComp = Placeholder();
   Widget _secondValidComp = Placeholder();
@@ -137,6 +137,8 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
     '\\',
   ];
   late AnimationController _controller;
+  Widget _seeButton = Placeholder();
+  bool isSeen = true;
   @override
   void initState() {
     // TODO: implement initState
@@ -151,9 +153,14 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
   bool _visibleButton = false;
 
   int i = 0;
+
   @override
   Widget build(BuildContext context) {
     if (i == 0) {
+      _seeButton = Icon(
+        key: ValueKey('sec'),
+        Icons.remove_red_eye_outlined,
+      );
       _firstValidComp = Container(
         key: ValueKey('first'),
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 7),
@@ -465,63 +472,269 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Color.fromARGB(255, 255, 175, 75),
         title: Text(
-          'Reset Password',
+          'Sign Up',
           style: TextStyle(
             color: Colors.black,
             fontSize: 19,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Color.fromARGB(255, 255, 175, 75),
       ),
       body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 15),
         child: ListView(
           children: [
             SizedBox(
-              height: 17,
+              height: 5,
             ),
-            Container(
-              child: TextField(
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.visiblePassword,
-                autofocus: true,
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 131, 131, 131))),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 255, 175, 75))),
-                    labelText: 'New Password',
-                    floatingLabelStyle: TextStyle(
-                      color: Color.fromARGB(255, 255, 175, 75),
-                    )),
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    setState(() {
-                      _animationController.forward();
-                      _setVisibility = true;
-                      handleChange(value);
-                    });
-                  } else {
-                    setState(() {
-                      _animationController.reverse();
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.name,
+              autofocus: true,
+              autofillHints: const [AutofillHints.familyName],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Farm name',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.name,
+              autofocus: true,
+              autofillHints: const [
+                AutofillHints.givenName,
+                AutofillHints.creditCardName,
+                AutofillHints.name
+              ],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Farm owner name',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.emailAddress,
+              autofocus: true,
+              autofillHints: const [AutofillHints.email],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Email',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.phone,
+              autofocus: true,
+              autofillHints: const [AutofillHints.telephoneNumber],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Phone number',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.name,
+              autofocus: true,
+              autofillHints: const [AutofillHints.addressCityAndState],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Farm address/ Pickup location',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+              maxLines: 3,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            DottedBorder(
+                dashPattern: const [16, 7],
+                color: Color.fromARGB(255, 255, 175, 75),
+                child: Container(
+                  height: 170,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: Center(
+                    child: Column(children: [
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.camera_alt)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Select a profile picture(optional)',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ]),
+                  ),
+                )),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              obscureText: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Transaction Pin',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+              maxLength: 4,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: TextField(
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.name,
+                    autofocus: true,
+                    obscureText: isSeen,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                                color:
+                                    const Color.fromARGB(255, 131, 131, 131))),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                                color:
+                                    const Color.fromARGB(255, 255, 175, 75))),
+                        labelText: 'Password',
+                        floatingLabelStyle: TextStyle(
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        )),
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        setState(() {
+                          _animationController.forward();
+                          _setVisibility = true;
+                        });
 
-                      if (_animationController.isDismissed) {
-                        _setVisibility = false;
+                        handleChange(value);
+                      } else {
+                        handleChange(value);
                       }
-                    });
-                  }
-                },
-                onEditingComplete: () {},
-              ),
+                    },
+                    onEditingComplete: () {},
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      if (isSeen) {
+                        setState(() {
+                          isSeen = false;
+                          _seeButton = Icon(
+                            key: ValueKey('first'),
+                            Icons.remove_red_eye_rounded,
+                            color: Color.fromARGB(255, 255, 175, 75),
+                          );
+                        });
+                      } else {
+                        isSeen = true;
+                        setState(() {
+                          setState(() {
+                            _seeButton = Icon(
+                              key: ValueKey('sec'),
+                              Icons.remove_red_eye_outlined,
+                              color: Colors.grey,
+                            );
+                          });
+                        });
+                      }
+                    },
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      child: _seeButton,
+                    )),
+              ],
             ),
             SizedBox(height: 10),
             FadeTransition(
@@ -549,14 +762,40 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
                     ]),
                   )),
             ),
-            SizedBox(height: 30),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.name,
+              autofocus: true,
+              obscureText: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Confirm PassWord',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {},
+              onEditingComplete: () {},
+            ),
+            SizedBox(
+              height: 30,
+            ),
             FadeTransition(
               opacity: Tween<double>(begin: 0, end: 1).animate(_controller),
               child: Visibility(
                 visible: _visibleButton,
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/transaction');
+                    Navigator.pop(context);
                   },
                   icon: Icon(
                     Icons.arrow_forward_rounded,

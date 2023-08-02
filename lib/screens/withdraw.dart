@@ -220,11 +220,11 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
       late String nameInput_ = nameInput;
       late String numberInput = acctNumber;
       late String bankName_ = bankName;
-      FocusNode _acctNameFN = FocusNode();
-      FocusNode _acctBankFN = FocusNode();
+      FocusNode acctNameFN = FocusNode();
+      FocusNode acctBankFN = FocusNode();
       setState(() {
         _animatedAcctName = TextField(
-          focusNode: _acctNameFN,
+          focusNode: acctNameFN,
           keyboardType: TextInputType.name,
           onChanged: (value) {
             nameInput = value;
@@ -241,7 +241,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                   ),
                 );
               });
-              _acctBankFN.requestFocus();
+              acctBankFN.requestFocus();
             }
           },
           controller: TextEditingController(text: nameInput_),
@@ -278,7 +278,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                   ),
                 );
               });
-              _acctNameFN.requestFocus();
+              acctNameFN.requestFocus();
             }
           },
           decoration: InputDecoration(
@@ -296,7 +296,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
           ),
         );
         _animatedBankName = TextField(
-          focusNode: _acctBankFN,
+          focusNode: acctBankFN,
           keyboardType: TextInputType.name,
           onChanged: (value) {
             bankName_ = value;
@@ -362,7 +362,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
     }
 
     void verifybottomModal() {
-      String _text = 'Verifying User';
+      String text = 'Verifying User';
       int i = 0;
       Future ft = Future(() {});
 
@@ -374,12 +374,12 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
               ft.then((value) async {
                 await Future.delayed(Duration(milliseconds: 2000), () {
                   modalsetState(() {
-                    _text = 'Verifying Amount';
+                    text = 'Verifying Amount';
                   });
                 });
                 await Future.delayed(Duration(milliseconds: 3000), () {
                   modalsetState(() {
-                    _text = 'Verifying Transaction';
+                    text = 'Verifying Transaction';
                   });
                 });
                 await Future.delayed(Duration(milliseconds: 2000), () {
@@ -391,7 +391,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
               });
 
               return Card(
-                child: Container(
+                child: SizedBox(
                   height: 150,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -406,7 +406,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                         SizedBox(
                           width: 10,
                         ),
-                        Text(_text)
+                        Text(text)
                       ],
                     ),
                   ),
@@ -421,7 +421,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
     void addFunction(String e, BuildContext context, StateSetter modalsetState,
         String from) async {
       if (value.length < 4) {
-        if (value.length == 0) {
+        if (value.isEmpty) {
           modalsetState(() {
             _firstvalidComp = Container(
               key: const ValueKey('sec'),
