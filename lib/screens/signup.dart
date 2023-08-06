@@ -1,16 +1,25 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter_solidart/flutter_solidart.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../config.dart';
+import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:solidart/solidart.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  final SupabaseClient supabase;
+  const SignUp({super.key, required this.supabase});
 
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
+  final ImagePicker _imagePicker = ImagePicker();
   late AnimationController _animationController;
   Widget _firstValidComp = Placeholder();
   Widget _secondValidComp = Placeholder();
@@ -153,9 +162,266 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   bool _visibleButton = false;
 
   int i = 0;
+  String farm_name = '';
+  String farm_owner = '';
+  String email = '';
+  String phone = '';
+  String address = '';
+  String trx_pin = '';
+  String password = '';
+  String c_password = '';
+  bool isImageSelected = false;
+  final dio = Dio();
+  late XFile? image;
+  String imageName = '';
+  final imageSinal = createSignal('Select a profile picture(optional)');
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    imageSinal.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var supabase = widget.supabase;
+
+    uploadimgae(image) async {
+      try {
+        supabase.storage
+            .from('images')
+            .uploadBinary(
+                'farmersImage/${image.name}', await image.readAsBytes(),
+                fileOptions: FileOptions(
+                  upsert: true,
+                ),
+                retryAttempts: 1)
+            .then((value) => print(value));
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('An error occured try again'),
+              );
+            });
+      }
+    }
+
+    handleProfile() async {
+      image = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        imageName = UniqueKey().toString() + image!.name;
+        imageSinal.set(image!.name);
+        isImageSelected = true;
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Warning'),
+                content: Text('No Image was selected'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      }
+    }
+
+    handleClick() async {
+      int isDone = 0;
+      if (isImageSelected) {
+        showDialog(
+            context: context,
+            builder: (builder) => AlertDialog(
+                  elevation: 24,
+                  backgroundColor: Colors.white,
+                  content: SizedBox(
+                    height: 100,
+                    child: Row(
+                      children: [
+                        SpinKitDualRing(
+                          size: 30,
+                          lineWidth: 3.0,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Uploading Image...')
+                      ],
+                    ),
+                  ),
+                ));
+        await Future.delayed(Duration(milliseconds: 1000));
+        await uploadimgae(image).catchError((e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('there was an error try again.'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'))
+                  ],
+                );
+              });
+        }).then((value) => Navigator.pop(context));
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Warning'),
+                content: Text('No Image was selected'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      }
+      if ((password == c_password) &&
+          farm_name.isNotEmpty &&
+          farm_owner.isNotEmpty &&
+          (email.isNotEmpty &&
+              email.contains('@') &&
+              email.toLowerCase().contains('.com')) &&
+          trx_pin.isNotEmpty &&
+          trx_pin.length == 4 &&
+          address.isNotEmpty &&
+          password.isNotEmpty &&
+          c_password.isNotEmpty &&
+          phone.isNotEmpty) {
+        var Signup = {
+          'farm_name': farm_name.trim(),
+          'owner_name': farm_owner.trim(),
+          'email': email.trim(),
+          'phone': phone.trim(),
+          'farm_address': address.trim(),
+          'transaction_pin': trx_pin.trim(),
+          'password': password.trim(),
+          'imageurl': imageName.isEmpty ? null : imageName
+        };
+        showDialog(
+            context: context,
+            builder: (builder) => AlertDialog(
+                  elevation: 24,
+                  backgroundColor: Colors.white,
+                  content: SizedBox(
+                    height: 100,
+                    child: Row(
+                      children: [
+                        SpinKitDualRing(
+                          size: 30,
+                          lineWidth: 3.0,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Signing in')
+                      ],
+                    ),
+                  ),
+                ));
+        await Future.delayed(Duration(milliseconds: 1000));
+        try {
+          Response response =
+              await dio.post('$baseUrl/signup', data: Signup).then((value) {
+            Navigator.pop(context);
+            return value;
+          });
+
+          if (response.data == 'unsuccessfull') {
+            () async {
+              await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        elevation: 24,
+                        title: Text('Error'),
+                        content: Text(
+                            'Email have been used already! check your email and try again.'),
+                        backgroundColor: Colors.white,
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'))
+                        ],
+                      ));
+            }();
+          } else {
+            await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      elevation: 24,
+                      title: Text('SIGNED UP SUCESSFULLY!!'),
+                      content: Text(
+                          'You have successfully registered as a partner with Agric Fresh, your account will be reviewed. you can now start uploading product to your account and earning!.'),
+                      backgroundColor: Colors.white,
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'))
+                      ],
+                    ));
+            isDone = 1;
+          }
+        } catch (e) {
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    elevation: 24,
+                    title: Text('Error'),
+                    content: Text('Network'),
+                    backgroundColor: Colors.white,
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK'))
+                    ],
+                  ));
+        }
+      } else {
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  elevation: 24,
+                  title: Text('Error'),
+                  content: Text('Please fill in the correct details '),
+                  backgroundColor: Colors.white,
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+      return isDone;
+    }
+
     if (i == 0) {
       _seeButton = Icon(
         key: ValueKey('sec'),
@@ -459,6 +725,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
         setState(() {
           _visibleButton = true;
         });
+        password = value;
         _controller.forward();
       } else {
         _controller.reverse();
@@ -509,7 +776,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                farm_name = value;
+              },
               onEditingComplete: () {},
             ),
             SizedBox(
@@ -537,7 +806,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                farm_owner = value;
+              },
               onEditingComplete: () {},
             ),
             SizedBox(
@@ -549,6 +820,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
               autofocus: true,
               autofillHints: const [AutofillHints.email],
               decoration: InputDecoration(
+                  hintText: 'Enter a valid email',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide(
@@ -561,7 +833,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                email = value;
+              },
               onEditingComplete: () {},
             ),
             SizedBox(
@@ -585,7 +859,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                phone = value;
+              },
               onEditingComplete: () {},
             ),
             SizedBox(
@@ -609,7 +885,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                address = value;
+              },
               onEditingComplete: () {},
               maxLines: 3,
             ),
@@ -619,22 +897,30 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
             DottedBorder(
                 dashPattern: const [16, 7],
                 color: Color.fromARGB(255, 255, 175, 75),
-                child: Container(
-                  height: 170,
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Center(
-                    child: Column(children: [
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.camera_alt)),
-                      SizedBox(
-                        height: 10,
+                child: SignalBuilder(
+                  signal: imageSinal,
+                  builder: (context, imagesignal, child) {
+                    return Container(
+                      height: 130,
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Center(
+                        child: Column(children: [
+                          IconButton(
+                              onPressed: () {
+                                handleProfile();
+                              },
+                              icon: Icon(Icons.camera_alt)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            imagesignal,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ]),
                       ),
-                      Text(
-                        'Select a profile picture(optional)',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ]),
-                  ),
+                    );
+                  },
                 )),
             SizedBox(
               height: 10,
@@ -657,7 +943,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                trx_pin = value;
+              },
               onEditingComplete: () {},
               maxLength: 4,
             ),
@@ -783,7 +1071,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   floatingLabelStyle: TextStyle(
                     color: Color.fromARGB(255, 255, 175, 75),
                   )),
-              onChanged: (value) {},
+              onChanged: (value) {
+                c_password = value;
+              },
               onEditingComplete: () {},
             ),
             SizedBox(
@@ -795,7 +1085,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                 visible: _visibleButton,
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.pop(context);
+                    handleClick().then((value) {
+                      Navigator.pop(context);
+                    });
                   },
                   icon: Icon(
                     Icons.arrow_forward_rounded,

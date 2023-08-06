@@ -1,14 +1,146 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../config.dart';
+import '../main.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+// ignore: must_be_immutable
 class LoginIn extends StatelessWidget {
-  final FocusNode _focusNodeUsername = FocusNode();
+  final SupabaseClient supabase;
+  final User_ appuser;
   final FocusNode _focusNodePassword = FocusNode();
+  String username = '';
+  String password = '';
+  LoginIn({super.key, required this.supabase, required this.appuser});
+  final dio = Dio();
 
-  LoginIn({super.key});
   @override
   Widget build(BuildContext context) {
+    loginUser() async {
+      int isDone = 0;
+      Map<String, String> logindata;
+
+      if (username.isNotEmpty && password.isNotEmpty) {
+        logindata = {'email': username, 'password': password};
+
+        showDialog(
+            context: context,
+            builder: (builder) => AlertDialog(
+                  elevation: 24,
+                  backgroundColor: Colors.white,
+                  content: SizedBox(
+                    height: 100,
+                    child: Row(
+                      children: [
+                        SpinKitDualRing(
+                          size: 30,
+                          lineWidth: 3.0,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Loging in...')
+                      ],
+                    ),
+                  ),
+                ));
+        await Future.delayed(Duration(milliseconds: 1000));
+        try {
+          var response = await dio.post(
+            '$baseUrl/login',
+            data: logindata,
+          );
+          print(response);
+
+          if (response.data == 0) {
+            Navigator.pop(context);
+            () async {
+              await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        elevation: 24,
+                        title: Text('Error'),
+                        content: Text(''),
+                        backgroundColor: Colors.white,
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'))
+                        ],
+                      ));
+            }();
+          } else {
+            appuser.id = response.data["id"];
+            appuser.email = response.data['email'];
+            appuser.farmName = response.data["farm name"];
+            appuser.farmOwnerName = response.data["farm owner name"];
+            appuser.pickUpaddr = response.data["pickup address"];
+            appuser.trxPin = response.data["transaction pin"];
+            appuser.imageUrl = response.data["image url"];
+            appuser.phoneNumber = response.data["phone number"];
+            Navigator.pop(context);
+            print(appuser.email);
+            await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      elevation: 24,
+                      title: Text(
+                          'Login Success, Welcome Back ${appuser.farmOwnerName}'),
+                      content: Text(''),
+                      backgroundColor: Colors.white,
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'))
+                      ],
+                    ));
+            isDone = 1;
+          }
+        } catch (e) {
+          Navigator.pop(context);
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    elevation: 24,
+                    title: Text('Error'),
+                    content: Text('Network error.'),
+                    backgroundColor: Colors.white,
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK'))
+                    ],
+                  ));
+        }
+      } else {
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  elevation: 24,
+                  title: Text('Error'),
+                  content: Text('Please fill in the correct details '),
+                  backgroundColor: Colors.white,
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+      return isDone;
+    }
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -60,7 +192,9 @@ class LoginIn extends StatelessWidget {
                     floatingLabelStyle: TextStyle(
                       color: Color.fromARGB(255, 255, 175, 75),
                     )),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  username = value;
+                },
                 onEditingComplete: () {
                   _focusNodePassword.requestFocus();
                 },
@@ -89,7 +223,9 @@ class LoginIn extends StatelessWidget {
                       color: Color.fromARGB(255, 255, 175, 75),
                     )),
                 obscureText: true,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  password = value;
+                },
                 onEditingComplete: () {},
               ),
             ),
@@ -98,7 +234,11 @@ class LoginIn extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () {
-                Navigator.pushNamed(context, '/transaction');
+                loginUser().then((value) {
+                  if (value == 1) {
+                    Navigator.pushNamed(context, '/transaction');
+                  }
+                });
               },
               icon: Icon(
                 Icons.arrow_forward_rounded,

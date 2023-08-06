@@ -363,7 +363,6 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
 
     void verifybottomModal() {
       String text = 'Verifying User';
-      int i = 0;
       Future ft = Future(() {});
 
       showCupertinoModalPopup(
