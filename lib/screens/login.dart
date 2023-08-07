@@ -23,7 +23,7 @@ class LoginIn extends StatelessWidget {
       Map<String, String> logindata;
 
       if (username.isNotEmpty && password.isNotEmpty) {
-        logindata = {'email': username, 'password': password};
+        logindata = {'email': username.trim(), 'password': password.trim()};
 
         showDialog(
             context: context,
@@ -63,7 +63,7 @@ class LoginIn extends StatelessWidget {
                   builder: (context) => AlertDialog(
                         elevation: 24,
                         title: Text('Error'),
-                        content: Text(''),
+                        content: Text('wrong email or password'),
                         backgroundColor: Colors.white,
                         actions: [
                           TextButton(
@@ -188,7 +188,7 @@ class LoginIn extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         borderSide: BorderSide(
                             color: const Color.fromARGB(255, 255, 175, 75))),
-                    labelText: 'Username',
+                    labelText: 'Email',
                     floatingLabelStyle: TextStyle(
                       color: Color.fromARGB(255, 255, 175, 75),
                     )),

@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
-
+import 'package:agric_fresh_app/config.dart';
+import 'package:agric_fresh_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ResetPswrd extends StatefulWidget {
-  const ResetPswrd({super.key});
+  final User_ appuser;
+  const ResetPswrd({super.key, required this.appuser});
 
   @override
   State<ResetPswrd> createState() => _ResetPswrdState();
@@ -149,10 +153,75 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
   }
 
   bool _visibleButton = false;
-
+  final dio = Dio();
+  String password = '';
   int i = 0;
   @override
   Widget build(BuildContext context) {
+    final User_ appuser = widget.appuser;
+    print(appuser.email);
+    handleReset() async {
+      bool isSuccessfull = false;
+      showDialog(
+          context: context,
+          builder: (builder) => AlertDialog(
+                elevation: 24,
+                backgroundColor: Colors.white,
+                content: SizedBox(
+                  height: 100,
+                  child: Row(
+                    children: [
+                      SpinKitDualRing(
+                        size: 30,
+                        lineWidth: 3.0,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Updating password...')
+                    ],
+                  ),
+                ),
+              ));
+      await Future.delayed(Duration(milliseconds: 1000));
+      try {
+        await dio.get('$baseUrl/resetpassword', queryParameters: {
+          'email': appuser.email,
+          'newpass': password,
+        }).then((value) async {
+          print(value);
+          isSuccessfull = true;
+
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    elevation: 24,
+                    title: Text('successfull!'),
+                    content: Text('password have been updated.'),
+                    backgroundColor: Colors.white,
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/');
+                          },
+                          child: Text('OK'))
+                    ],
+                  ));
+        });
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('sorry, An error occured try again later.'),
+              );
+            });
+      }
+      return isSuccessfull;
+    }
+
     if (i == 0) {
       _firstValidComp = Container(
         key: ValueKey('first'),
@@ -453,6 +522,7 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
           _visibleButton = true;
         });
         _controller.forward();
+        password = value;
       } else {
         _controller.reverse();
         if (_controller.isDismissed) {
@@ -556,7 +626,8 @@ class _ResetPswrdState extends State<ResetPswrd> with TickerProviderStateMixin {
                 visible: _visibleButton,
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/transaction');
+                    handleReset();
+                    // Navigator.pushNamed(context, '/');
                   },
                   icon: Icon(
                     Icons.arrow_forward_rounded,

@@ -1,10 +1,15 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously
 
+import 'package:agric_fresh_app/config.dart';
+import 'package:agric_fresh_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/components/touchDailComp.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ForgotPswrd extends StatefulWidget {
-  const ForgotPswrd({super.key});
+  final User_ appuser;
+  const ForgotPswrd({super.key, required this.appuser});
 
   @override
   State<ForgotPswrd> createState() => _ForgotPswrdState();
@@ -34,8 +39,165 @@ class _ForgotPswrdState extends State<ForgotPswrd>
   int i = 0;
 
   String value = '';
+  final dio = Dio();
+  String email = '';
+  String code = '';
   @override
   Widget build(BuildContext context) {
+    final User_ appuser = widget.appuser;
+    getconfirmation() async {
+      bool isSuccessful = false;
+      showDialog(
+          context: context,
+          builder: (builder) => AlertDialog(
+                elevation: 24,
+                backgroundColor: Colors.white,
+                content: SizedBox(
+                  height: 100,
+                  child: Row(
+                    children: [
+                      SpinKitDualRing(
+                        size: 30,
+                        lineWidth: 3.0,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Getting code...')
+                    ],
+                  ),
+                ),
+              ));
+      await Future.delayed(Duration(milliseconds: 1000));
+      try {
+        await dio.get('$baseUrl/password', queryParameters: {
+          'email': email,
+        }).then((value) {
+          isSuccessful = true;
+          print(value.data);
+          code = value.data['code'].toString().substring(0, 4);
+
+          Navigator.pop(context);
+        });
+      } catch (e) {
+        print(e);
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('sorry, An error occured try again later.'),
+              );
+            });
+      }
+      return isSuccessful;
+    }
+
+    handleForget() async {
+      bool isSuccessful = false;
+      if (!email.contains('@')) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('@ missing in your email enter a valid email.'),
+              );
+            });
+        return 0;
+      }
+      if (!email.contains('.com', email.indexOf('@'))) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Enter a valid email.'),
+              );
+            });
+        return 0;
+      }
+      if (email.isNotEmpty) {
+        showDialog(
+            context: context,
+            builder: (builder) => AlertDialog(
+                  elevation: 24,
+                  backgroundColor: Colors.white,
+                  content: SizedBox(
+                    height: 100,
+                    child: Row(
+                      children: [
+                        SpinKitDualRing(
+                          size: 30,
+                          lineWidth: 3.0,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Confirming email...')
+                      ],
+                    ),
+                  ),
+                ));
+        await Future.delayed(Duration(milliseconds: 1000));
+        try {
+          await dio.get(
+            "$baseUrl/forgetPassword",
+            queryParameters: {'email': email},
+          ).then((value) {
+            if (value.data == 0) {
+              Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Incorrect email'),
+                      content: Text(
+                          'The email you entered is incorrect, Please check your email and try again'),
+                    );
+                  });
+            } else {
+              print(value);
+              Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text('Email confirmed'),
+                    );
+                  });
+              isSuccessful = true;
+            }
+
+            return value;
+          });
+        } catch (e) {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('An error occured try again later.'),
+                );
+              });
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Enter a valid email.'),
+              );
+            });
+      }
+      return isSuccessful;
+    }
+
     void addFunction(String e, BuildContext context, StateSetter modalsetState,
         String from) async {
       value += e;
@@ -95,11 +257,24 @@ class _ForgotPswrdState extends State<ForgotPswrd>
             ),
           );
         });
-        await Future.delayed(Duration(milliseconds: 400), () {
+        if (value == code) {
+          await Future.delayed(Duration(milliseconds: 400));
           Navigator.of(context).pop();
           value = '';
-        });
-        Navigator.pushNamed(context, '/resetPassword');
+          appuser.email = email;
+          Navigator.pushNamed(context, '/resetPassword');
+        } else {
+          Navigator.of(context).pop();
+          value = '';
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Pin Error'),
+                  content: Text('The pin entered is incorrect. try again!'),
+                );
+              });
+        }
       }
     }
 
@@ -321,7 +496,9 @@ class _ForgotPswrdState extends State<ForgotPswrd>
                     floatingLabelStyle: TextStyle(
                       color: Color.fromARGB(255, 255, 175, 75),
                     )),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  email = value;
+                },
                 onEditingComplete: () {},
               ),
             ),
@@ -330,7 +507,17 @@ class _ForgotPswrdState extends State<ForgotPswrd>
             ),
             TextButton(
               onPressed: () {
-                showmodal('forgetpassword');
+                handleForget().then((value) {
+                  if (value == true) {
+                    Navigator.of(context).pop();
+                    getconfirmation().then((value) {
+                      if (value == true) {
+                        print(code);
+                        showmodal('forgetpassword');
+                      }
+                    });
+                  }
+                });
               },
               child: Text(
                 'submit',

@@ -92,13 +92,15 @@ class _HomeState extends State<Home> {
           case '/resetPassword':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const ResetPswrd(),
+                child: ResetPswrd(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/forgotPassword':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const ForgotPswrd(),
+                child: ForgotPswrd(appuser: appUser),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/transaction':

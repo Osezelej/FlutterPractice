@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../config.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:solidart/solidart.dart';
+import 'package:uuid/uuid.dart';
 
 class SignUp extends StatefulWidget {
   final SupabaseClient supabase;
@@ -148,6 +148,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   late AnimationController _controller;
   Widget _seeButton = Placeholder();
   bool isSeen = true;
+  final uuid = Uuid();
   @override
   void initState() {
     // TODO: implement initState
@@ -190,8 +191,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       try {
         supabase.storage
             .from('images')
-            .uploadBinary(
-                'farmersImage/${image.name}', await image.readAsBytes(),
+            .uploadBinary('farmersImage/$imageName', await image.readAsBytes(),
                 fileOptions: FileOptions(
                   upsert: true,
                 ),
@@ -213,7 +213,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       image = await _imagePicker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        imageName = UniqueKey().toString() + image!.name;
+        imageName = uuid.v4() + image!.name;
         imageSinal.set(image!.name);
         isImageSelected = true;
       } else {
@@ -315,8 +315,9 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
           'farm_address': address.trim(),
           'transaction_pin': trx_pin.trim(),
           'password': password.trim(),
-          'imageurl': imageName.isEmpty ? null : imageName
+          'image_name': imageName.isNotEmpty ? imageName : null
         };
+        print(imageName);
         showDialog(
             context: context,
             builder: (builder) => AlertDialog(
