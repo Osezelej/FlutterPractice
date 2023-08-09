@@ -7,8 +7,14 @@ class TransactionHistoryItem extends StatelessWidget {
   final String? amount;
   final String? date;
   final String? time;
+  final String name;
   const TransactionHistoryItem(
-      {this.status, this.amount, this.date, this.time, super.key});
+      {this.status,
+      this.amount,
+      this.date,
+      this.time,
+      super.key,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +29,33 @@ class TransactionHistoryItem extends StatelessWidget {
             size: 25,
             color: Color.fromARGB(255, 0, 255, 0),
           );
-    return Column(
-      children: [
-        ListTile(
-          tileColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          title: Text('$amount'),
-          titleAlignment: ListTileTitleAlignment.center,
-          subtitle: Text('$date'),
-          trailing: Text('$time'),
-          leading: icon,
-          style: ListTileStyle.list,
-        ),
-        SizedBox(height: 0.0),
-      ],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            minVerticalPadding: 25,
+            tileColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            title:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                '$name'.toUpperCase(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text('$amount')
+            ]),
+            subtitle: Text('$date'),
+            trailing: Text('$time'),
+            leading: icon,
+            titleAlignment: ListTileTitleAlignment.top,
+            style: ListTileStyle.list,
+          ),
+          SizedBox(height: 2.0),
+        ],
+      ),
     );
   }
 }

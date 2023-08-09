@@ -106,7 +106,9 @@ class _HomeState extends State<Home> {
           case '/transaction':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const TransactionHistory(),
+                child: TransactionHistory(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/upload product':
