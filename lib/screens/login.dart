@@ -83,6 +83,7 @@ class LoginIn extends StatelessWidget {
             appuser.trxPin = response.data["transaction pin"];
             appuser.imageUrl = response.data["image url"];
             appuser.phoneNumber = response.data["phone number"];
+            appuser.acctBal = response.data["acctBal"].toString();
             Navigator.pop(context);
             print(appuser.email);
             await showDialog(
@@ -104,6 +105,7 @@ class LoginIn extends StatelessWidget {
             isDone = 1;
           }
         } catch (e) {
+          print(e);
           Navigator.pop(context);
           await showDialog(
               context: context,

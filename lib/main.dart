@@ -43,17 +43,18 @@ class User_ {
   String email;
   dynamic imageUrl;
   String pickUpaddr;
+  String acctBal;
 
-  User_({
-    required this.id,
-    required this.farmName,
-    required this.farmOwnerName,
-    required this.phoneNumber,
-    required this.trxPin,
-    required this.email,
-    required this.imageUrl,
-    required this.pickUpaddr,
-  });
+  User_(
+      {required this.id,
+      required this.farmName,
+      required this.farmOwnerName,
+      required this.phoneNumber,
+      required this.trxPin,
+      required this.email,
+      required this.imageUrl,
+      required this.pickUpaddr,
+      required this.acctBal});
 }
 
 class _HomeState extends State<Home> {
@@ -66,6 +67,7 @@ class _HomeState extends State<Home> {
     email: '',
     imageUrl: '',
     pickUpaddr: '',
+    acctBal: '',
   );
 
   @override
@@ -114,7 +116,10 @@ class _HomeState extends State<Home> {
           case '/upload product':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const UploadProduct(),
+                child: UploadProduct(
+                  appuser: appUser,
+                  supabase: supabase,
+                ),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
 

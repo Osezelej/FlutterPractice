@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/components/transaction_historyComp.dart';
@@ -20,117 +20,71 @@ class TransactionHistory extends StatefulWidget {
 
 class _TransactionHistoryState extends State<TransactionHistory> {
   bool iconisPressed = false;
-  final transactionData = [];
+  List transactionData = [];
   // resource
   late final Resource trxData;
   final Dio dio = Dio();
   bool isEmpty = false;
+  fetchData(User_ appuser, BuildContext context, StateSetter setState) async {
+    var response = await dio.get('$baseUrl/transactions',
+        queryParameters: {'email': appuser.email});
 
-  int i = 0;
-  @override
-  Widget build(BuildContext context) {
-    final User_ appuser = widget.appuser;
-    if (i == 0) {
-      fetchData(context, String email) async {
-        await Future.delayed(Duration(milliseconds: 1300));
-        try {
-          Response response = await dio.get(
-            '$baseUrl/transactions',
-            queryParameters: {'email': email},
-          );
-          List data = [];
-          data.addAll(response.data);
-          if (data.isNotEmpty) {
-            transactionData.addAll(response.data);
-            setState(() {
-              isEmpty = false;
-            });
-          } else {
-            transactionData.addAll([]);
-            setState(() {
-              isEmpty = true;
-            });
-          }
-        } catch (e) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text('Error'),
-                  content: Text('An error occured, Try again'),
-                  actions: [
-                    TextButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await Future.delayed(Duration(milliseconds: 1000));
-                        },
-                        child: Text('OK,logout')),
-                    TextButton(
-                      onPressed: () {
-                        fetchData(context, email);
-                      },
-                      child: Text('Try again'),
-                    )
-                  ],
-                );
-              });
-        }
-      }
-
-      fetchData(context, appuser.email);
-    }
-    i++;
-    fetchData(context, String email) async {
-      await Future.delayed(Duration(milliseconds: 3000));
-      try {
-        Response response = await dio.get(
-          '$baseUrl/transactions',
-          queryParameters: {'email': email},
-        );
-        List data = [];
-        data.addAll(response.data);
-        print(response.data);
-        if (data.isNotEmpty) {
-          transactionData.addAll(response.data);
-          setState(() {
-            isEmpty = false;
-          });
-        } else {
-          transactionData.addAll([]);
-          setState(() {
-            isEmpty = true;
-          });
-        }
-      } catch (e) {
-        showDialog(
+    if (response.statusCode == 200) {
+      if (response.data != 0) {
+        setState(() {
+          transactionData = response.data;
+        });
+        print(transactionData);
+      } else {
+        await showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('Error'),
-                content: Text('An error occured, Try again'),
+                title: Text('Network error'),
+                content: Text('sorry! an error occured please try again later'),
                 actions: [
                   TextButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        await Future.delayed(Duration(milliseconds: 1000));
-                        Navigator.pushNamed(context, '/');
+                      onPressed: () {
+                        Navigator.popAndPushNamed(context, '/');
                       },
-                      child: Text('OK,logout')),
-                  TextButton(
-                    onPressed: () {
-                      fetchData(context, email);
-                    },
-                    child: Text('Try again'),
-                  )
+                      child: Text('OK'))
                 ],
               );
             });
       }
+    } else {
+      await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Network error'),
+              content: Text('sorry! an error occured please try again later'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/');
+                    },
+                    child: Text('OK'))
+              ],
+            );
+          });
     }
+  }
+
+  int i = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final User_ appuser = widget.appuser;
+    if (i == 0) {
+      fetchData(appuser, context, setState);
+    }
+    i++;
 
     Icon icon = iconisPressed
         ? const Icon(Icons.remove_red_eye_outlined)
         : const Icon(Icons.remove_red_eye);
+
     return Scaffold(
       drawer: Drawer(
         backgroundColor: Colors.white,
@@ -215,7 +169,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         color: Color.fromARGB(255, 255, 175, 75),
         onRefresh: () async {
           await Future.delayed(Duration(milliseconds: 400));
-          fetchData(context, appuser.email);
         },
         child: CustomScrollView(
           slivers: [
@@ -281,8 +234,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      const Text(
-                                        '0.00',
+                                      Text(
+                                        appuser.acctBal,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 30,
@@ -357,17 +310,12 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 )),
             SliverList(
                 delegate: SliverChildBuilderDelegate(
-                    childCount: transactionData.length,
+                    childCount:
+                        transactionData.isEmpty ? 1 : transactionData.length,
                     (BuildContext context, int index) {
-              return isEmpty
-                  ? Center(
-                      child: Column(
-                        children: [
-                          SpinKitDualRing(
-                              color: Color.fromARGB(255, 255, 175, 75)),
-                          Text('No transactions yet'),
-                        ],
-                      ),
+              return transactionData.isEmpty
+                  ? ListTile(
+                      title: Text('There is no transaction available yet'),
                     )
                   : TransactionHistoryItem(
                       name: transactionData[index]['name'] as String,
