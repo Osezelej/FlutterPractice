@@ -169,7 +169,7 @@ class _UploadProductState extends State<UploadProduct> {
           'product_photo_url': '$ImagebaseUrl/$imageName',
           'product_price': priceInput.trim(),
           'farm_name': appuser.farmName.trim(),
-          'owner_email': appuser.email,
+          'owner_email': appuser.email.trim(),
         });
         if (response.statusCode == 200) {
           if (response.data != 0) {

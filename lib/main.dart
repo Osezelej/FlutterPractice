@@ -156,7 +156,9 @@ class _HomeState extends State<Home> {
           case '/withdraw':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const Widthdraw(),
+                child: Widthdraw(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.bottomToTop,
                 settings: settings);
           case '/profile':

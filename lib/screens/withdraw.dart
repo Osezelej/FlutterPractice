@@ -5,9 +5,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:agric_fresh_app/main.dart';
 
 class Widthdraw extends StatefulWidget {
-  const Widthdraw({super.key});
+  final User_ appuser;
+  const Widthdraw({super.key, required this.appuser});
 
   @override
   State<Widthdraw> createState() => _WidthdrawState();
@@ -141,9 +143,9 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
   Widget _fourthvalidComp = Placeholder();
 
   late String value;
-  final String _accountName = 'Anubahimendo Osezele Joseph';
-  final String _accountNumber = '0789601012';
-  final String _bankName = 'ACCESS BANK';
+  final String _accountName = 'enter your acount name';
+  final String _accountNumber = 'Enter your account number';
+  final String _bankName = 'enter your bank name';
 
   @override
   Widget build(BuildContext context) {
