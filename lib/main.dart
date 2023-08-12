@@ -44,6 +44,10 @@ class User_ {
   dynamic imageUrl;
   String pickUpaddr;
   String acctBal;
+  String acctName;
+  String acctNumber;
+  String bankName;
+  List transactionData;
 
   User_(
       {required this.id,
@@ -54,7 +58,11 @@ class User_ {
       required this.email,
       required this.imageUrl,
       required this.pickUpaddr,
-      required this.acctBal});
+      required this.acctBal,
+      required this.acctName,
+      required this.bankName,
+      required this.acctNumber,
+      required this.transactionData});
 }
 
 class _HomeState extends State<Home> {
@@ -68,6 +76,10 @@ class _HomeState extends State<Home> {
     imageUrl: '',
     pickUpaddr: '',
     acctBal: '',
+    acctName: '',
+    acctNumber: '',
+    bankName: '',
+    transactionData: [],
   );
 
   @override
@@ -164,13 +176,15 @@ class _HomeState extends State<Home> {
           case '/profile':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const Profile(),
+                child: Profile(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.fade,
                 settings: settings);
           case '/pendingUpload':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const PendingUpload(),
+                child: PendingUpload(appuser: appUser),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/help':

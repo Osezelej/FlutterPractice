@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:agric_fresh_app/main.dart';
+import 'package:dio/dio.dart';
+import 'package:agric_fresh_app/config.dart';
 
 class Widthdraw extends StatefulWidget {
   final User_ appuser;
@@ -18,7 +20,7 @@ class Widthdraw extends StatefulWidget {
 class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
   final GlobalKey<SliverAnimatedListState> _key = GlobalKey();
   List<Map> data = [];
-  List<Map<String, String>> transactionData = [
+  late List<Map<String, String>> transactionData = [
     {
       'id': 'Psld-4536-cnjhfsh48i',
       'status': 'credit',
@@ -118,18 +120,26 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
     '0',
     '#'
   ];
+  final dio = Dio();
+  late User_ appuser;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      for (Map item in transactionData) {
-        data.add(item);
-        _key.currentState!.insertItem(
-          data.length - 1,
-        );
-        await Future.delayed(Duration(milliseconds: 100));
+      for (Map item in appuser.transactionData) {
+        if (item['status'] == 'debit') {
+          data.add(item);
+          _key.currentState!.insertItem(
+            data.length - 1,
+          );
+        }
+
+        await Future.delayed(Duration(milliseconds: 30));
       }
+
+      fetchAcctdetails(appuser);
     });
   }
 
@@ -143,12 +153,191 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
   Widget _fourthvalidComp = Placeholder();
 
   late String value;
-  final String _accountName = 'enter your acount name';
-  final String _accountNumber = 'Enter your account number';
-  final String _bankName = 'enter your bank name';
+  String _accountName = 'enter your acount name';
+  String _accountNumber = 'Enter your account number';
+  String _bankName = 'enter your bank name';
+
+  fetchAcctdetails(User_ appuser) async {
+    showDialog(
+        context: context,
+        builder: (builder) => AlertDialog(
+              elevation: 24,
+              backgroundColor: Colors.white,
+              content: SizedBox(
+                height: 100,
+                child: Row(
+                  children: [
+                    SpinKitDualRing(
+                      size: 30,
+                      lineWidth: 3.0,
+                      color: Color.fromARGB(255, 255, 175, 75),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Geting acctount details...')
+                  ],
+                ),
+              ),
+            ));
+    await Future.delayed(Duration(milliseconds: 1000));
+    try {
+      final response = await dio.get('$baseUrl/getacctDetails',
+          queryParameters: {'email': appuser.email});
+
+      if (response.statusCode == 200) {
+        if (response.data != 0) {
+          print(response.data);
+          appuser.acctName = response.data[0]['acct name'];
+          appuser.acctNumber = response.data[0]['acct number'];
+          appuser.bankName = response.data[0]['bank name'];
+          setState(() {
+            _animatedAcctName = Text(
+              appuser.acctName,
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 15,
+                fontWeight: FontWeight.w900,
+              ),
+            );
+            _animatedAcctNumber = Text(
+              appuser.acctNumber,
+              style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900),
+            );
+            _animatedBankName = Text(
+              appuser.bankName,
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 15,
+                fontWeight: FontWeight.w900,
+              ),
+            );
+          });
+          Navigator.pop(context);
+        } else {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Warning!!'),
+                  content: Text(
+                      'You have not registered any Bank Account details to this account, please ensure you register a valid bank account details to this to this account.'),
+                );
+              });
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(
+                    'Sorry, an error occured Geting your Account details, leave this Screen and try again'),
+              );
+            });
+      }
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text(
+                  'Sorry, an error occured Geting your Account details, leave this Screen and try again'),
+            );
+          });
+    }
+  }
+
+  insertacct(acctName, acctNumber, bankName) async {
+    showDialog(
+        context: context,
+        builder: (builder) => AlertDialog(
+              elevation: 24,
+              backgroundColor: Colors.white,
+              content: SizedBox(
+                height: 100,
+                child: Row(
+                  children: [
+                    SpinKitDualRing(
+                      size: 30,
+                      lineWidth: 3.0,
+                      color: Color.fromARGB(255, 255, 175, 75),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Registering Account Details...')
+                  ],
+                ),
+              ),
+            ));
+    await Future.delayed(Duration(milliseconds: 1000));
+    try {
+      final Response response = await dio.post('$baseUrl/registerAcct', data: {
+        'email': appuser.email,
+        'acct_name': acctName,
+        'acct_no': acctNumber,
+        'bank_name': bankName,
+      });
+      if (response.statusCode == 200) {
+        if (response.data != 0) {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Successful!!'),
+                  content: Text(
+                      'Your Account details have been registered successfully.'),
+                );
+              });
+        } else {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text(
+                      'Sorry, an error occured Registerig your Account details, try again Latter.'),
+                );
+              });
+        }
+      } else {
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(
+                    'Sorry, an error occured Registerig your Account details, try again Latter.'),
+              );
+            });
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text(
+                  'Sorry, an error occured Registerig your Account details, try again Latter.'),
+            );
+          });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    appuser = widget.appuser;
+
     if (i == 0) {
       _firstvalidComp = Container(
         key: const ValueKey('1'),
@@ -214,22 +403,31 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
           fontWeight: FontWeight.w900,
         ),
       );
+
+      // fetchAcctdetails(appuser);
     }
     i++;
     String value = '';
     void setAnimatedStates(
         String nameInput, String acctNumber, String bankName) {
-      late String nameInput_ = nameInput;
-      late String numberInput = acctNumber;
-      late String bankName_ = bankName;
+      // former data inputed
+      String prevnameInput = nameInput;
+      String prevacctNumber = acctNumber;
+      String prevBankname = bankName;
+
+      String nameInput_ = nameInput;
+      String numberInput = acctNumber;
+      String bankName_ = bankName;
+
       FocusNode acctNameFN = FocusNode();
       FocusNode acctBankFN = FocusNode();
       setState(() {
         _animatedAcctName = TextField(
           focusNode: acctNameFN,
           keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.newline,
           onChanged: (value) {
-            nameInput = value;
+            nameInput_ = value;
           },
           onEditingComplete: () {
             if (nameInput.isNotEmpty) {
@@ -264,6 +462,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
         _animatedAcctNumber = TextField(
           autofocus: true,
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.newline,
           controller: TextEditingController(text: numberInput),
           onChanged: (value) {
             numberInput = value;
@@ -303,7 +502,7 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
           onChanged: (value) {
             bankName_ = value;
           },
-          onEditingComplete: () {
+          onEditingComplete: () async {
             if (nameInput.isNotEmpty) {
               setState(() {
                 _animatedBankName = Text(
@@ -315,6 +514,14 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
                   ),
                 );
               });
+              if (prevnameInput == nameInput_ ||
+                  prevBankname == bankName_ ||
+                  prevacctNumber == numberInput) {
+                print('invalid acct');
+              } else {
+                await insertacct(nameInput_, numberInput, bankName_);
+              }
+
               print('completed');
             }
           },
@@ -495,99 +702,112 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
             ),
           );
         });
-        await Future.delayed(Duration(milliseconds: 300), () async {
-          Navigator.of(context).pop();
-          switch (from) {
-            case 'editwallet':
-              setAnimatedStates(_accountName, _accountNumber, _bankName);
-              break;
-            case 'withdraw':
-              showCupertinoModalPopup(
-                  context: context,
-                  builder: ((context) {
-                    return Card(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 50),
-                        child: TextField(
-                            textInputAction: TextInputAction.done,
-                            onEditingComplete: () {
-                              print('completed');
-                              Future.delayed(Duration(milliseconds: 300),
-                                  () async {
-                                Navigator.of(context).pop();
-                                await Future.delayed(
-                                    Duration(milliseconds: 300), () {
-                                  verifybottomModal();
+        if (appuser.trxPin == value) {
+          await Future.delayed(Duration(milliseconds: 300), () async {
+            Navigator.of(context).pop();
+            switch (from) {
+              case 'editwallet':
+                setAnimatedStates(_accountName, _accountNumber, _bankName);
+                break;
+              case 'withdraw':
+                showCupertinoModalPopup(
+                    context: context,
+                    builder: ((context) {
+                      return Card(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 50),
+                          child: TextField(
+                              textInputAction: TextInputAction.done,
+                              onEditingComplete: () {
+                                print('completed');
+                                Future.delayed(Duration(milliseconds: 300),
+                                    () async {
+                                  Navigator.of(context).pop();
+                                  await Future.delayed(
+                                      Duration(milliseconds: 300), () {
+                                    verifybottomModal();
+                                  });
                                 });
-                              });
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'amount',
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
+                              },
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: 'amount',
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 175, 75)),
+                                ),
+                                floatingLabelStyle: TextStyle(
                                     color: Color.fromARGB(255, 255, 175, 75)),
-                              ),
-                              floatingLabelStyle: TextStyle(
-                                  color: Color.fromARGB(255, 255, 175, 75)),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            )),
-                      ),
-                    );
-                  }));
-              break;
-          }
-          setState(() {
-            _firstvalidComp = Container(
-              key: const ValueKey('1'),
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
-              ),
-            );
-            _secondvalidComp = Container(
-              key: const ValueKey('2'),
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
-              ),
-            );
-
-            _thirdvalidComp = Container(
-              key: const ValueKey('3'),
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
-              ),
-            );
-
-            _fourthvalidComp = Container(
-              key: const ValueKey('4'),
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
-              ),
-            );
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                              )),
+                        ),
+                      );
+                    }));
+                break;
+            }
           });
-          value = '';
+        } else {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Wrong Transaction pin'),
+                  content: Text(
+                      'Sorry, You have entered thhe wrong transaction pin'),
+                );
+              });
+        }
+        setState(() {
+          _firstvalidComp = Container(
+            key: const ValueKey('1'),
+            height: 16,
+            width: 16,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          );
+          _secondvalidComp = Container(
+            key: const ValueKey('2'),
+            height: 16,
+            width: 16,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          );
+
+          _thirdvalidComp = Container(
+            key: const ValueKey('3'),
+            height: 16,
+            width: 16,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          );
+
+          _fourthvalidComp = Container(
+            key: const ValueKey('4'),
+            height: 16,
+            width: 16,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color.fromARGB(255, 255, 175, 74)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          );
         });
+        value = '';
       }
     }
 
@@ -890,21 +1110,28 @@ class _WidthdrawState extends State<Widthdraw> with TickerProviderStateMixin {
         ])),
         SliverAnimatedList(
             key: _key,
-            initialItemCount: data.length,
+            initialItemCount: data.isEmpty ? 1 : data.length,
             itemBuilder: (context, index, animation) {
-              return SlideTransition(
-                  position: animation.drive(
-                    Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(data[index]['amount']),
-                      trailing: Text(data[index]['time']),
-                      subtitle: Text(data[index]['date']),
-                    ),
-                  ));
+              return index < 1
+                  ? ListTile(
+                      title: Text(
+                        'There is no withdrawal',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  : SlideTransition(
+                      position: animation.drive(
+                        Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(data[index - 1]['amount']),
+                          trailing: Text(data[index - 1]['time']),
+                          subtitle: Text(data[index - 1]['date']),
+                        ),
+                      ));
             })
       ],
     ));

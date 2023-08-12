@@ -57,7 +57,7 @@ class _ProductCompState extends State<ProductComp> {
         ]),
         duration: const Duration(milliseconds: 300),
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        height: 235,
+        height: 237,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -33,6 +33,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       if (response.data != 0) {
         setState(() {
           transactionData = response.data;
+          appuser.transactionData = response.data;
         });
         print(transactionData);
       } else {
