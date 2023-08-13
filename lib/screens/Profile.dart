@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:agric_fresh_app/config.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:agric_fresh_app/main.dart';
 import 'package:dio/dio.dart';
 import 'package:agric_fresh_app/components/touchDailComp.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Profile extends StatefulWidget {
   final User_ appuser;
@@ -22,6 +24,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   String _initialName = 'Art Template';
   String _initialNumber = '08076320300';
   String _iitialAddr = '20, Along Farm Rd, AtanOta, Ogun State, Nigeria.';
+  String? _Name;
+  String? _Number;
+  String? _addr;
   Widget _firstvalidComp = Placeholder();
   Widget _secondvalidComp = Placeholder();
   Widget _thirdvalidComp = Placeholder();
@@ -44,6 +49,101 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     '0',
     '#'
   ];
+  updateUserProfile(
+      User_ appuser, String number, String addr, String farm_name) async {
+    showDialog(
+        context: context,
+        builder: (builder) => AlertDialog(
+              elevation: 24,
+              backgroundColor: Colors.white,
+              content: SizedBox(
+                height: 100,
+                child: Row(
+                  children: [
+                    SpinKitDualRing(
+                      size: 30,
+                      lineWidth: 3.0,
+                      color: Color.fromARGB(255, 255, 175, 75),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Getting code...')
+                  ],
+                ),
+              ),
+            ));
+    await Future.delayed(Duration(milliseconds: 1000));
+    try {
+      final response = await dio.post(
+        '$baseUrl/updateUserProfile',
+        data: {
+          'email': appuser.email,
+          'farm_name': farm_name,
+          'phone': number,
+          'farm_address': addr,
+        },
+      );
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        if (response.data == 0) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text(
+                      'Sorry, an error occured when updating your profile.'),
+                );
+              });
+          await Future.delayed(Duration(milliseconds: 1000));
+          Navigator.popAndPushNamed(context, '/');
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text(
+                      'Sorry, an error occured when updating your profile.'),
+                );
+              });
+        } else {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Succefull'),
+                  content:
+                      Text('Your farm details have been updated successfully'),
+                );
+              });
+        }
+      } else {
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(
+                    'Sorry, an error occured when updating your profile, Please try again later.'),
+              );
+            });
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text(
+                  'Sorry, an error occured when updating your profile, Please try again later'),
+            );
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     User_ appuser = widget.appuser;
@@ -143,6 +243,24 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           await Future.delayed(Duration(milliseconds: 400));
           Navigator.of(context).pop();
           value = '';
+          if (_Name != null || _Number != null || _addr != null) {
+            updateUserProfile(
+              appuser,
+              _Number ?? _initialNumber,
+              _addr ?? _iitialAddr,
+              _Name ?? _initialName,
+            );
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Warning'),
+                    content: Text(
+                        'No changes were made to your profile, make changes and try again.'),
+                  );
+                });
+          }
         } else {
           Navigator.of(context).pop();
           value = '';
@@ -408,12 +526,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             textCapitalization: TextCapitalization.words,
                             autofocus: true,
                             onChanged: (value) {
-                              _initialName = value;
+                              _Name = value;
                             },
                             onEditingComplete: () {
                               setState(() {
                                 _animatedFarmName = Text(
-                                  _initialName,
+                                  _Name == null
+                                      ? _initialName
+                                      : _Name as String,
                                   style: TextStyle(
                                     color: Colors.grey[400],
                                     fontSize: 15,
@@ -471,12 +591,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                           _animatedFarmNunmber = TextField(
                             autofocus: true,
                             onChanged: (value) {
-                              _initialNumber = value;
+                              _Number = value;
                             },
                             onEditingComplete: () {
                               setState(() {
                                 _animatedFarmNunmber = Text(
-                                  _initialNumber,
+                                  _Number == null
+                                      ? _initialNumber
+                                      : _Number as String,
                                   style: TextStyle(
                                     color: Colors.grey[400],
                                     fontSize: 15,
@@ -534,12 +656,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                           _animatedFarmLocation = TextField(
                             autofocus: true,
                             onChanged: (value) {
-                              _iitialAddr = value;
+                              _addr = value;
                             },
                             onEditingComplete: () {
                               setState(() {
                                 _animatedFarmLocation = Text(
-                                  _iitialAddr,
+                                  _addr == null ? _iitialAddr : _addr as String,
                                   style: TextStyle(
                                     color: Colors.grey[400],
                                     fontSize: 15,

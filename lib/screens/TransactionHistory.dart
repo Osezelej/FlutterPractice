@@ -6,7 +6,6 @@ import 'package:agric_fresh_app/components/drawerComp.dart';
 import 'package:agric_fresh_app/main.dart';
 import 'package:agric_fresh_app/config.dart';
 import 'package:flutter_solidart/flutter_solidart.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:solidart/solidart.dart';
 import 'package:dio/dio.dart';
 
@@ -100,7 +99,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       : AssetImage('assets/icon.png') as ImageProvider,
                 ),
                 title: Text(
-                  'Art Template',
+                  appuser.farmName,
                   style: TextStyle(
                     color: Colors.grey[900],
                     fontSize: 17,
