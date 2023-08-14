@@ -141,9 +141,11 @@ class _PendingUploadState extends State<PendingUpload> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             NegotiationComp(
-                              image: value['Image'],
-                              pName: value['Name'],
-                              pPrice: value['Price'],
+                              image: value['product_photo_url'],
+                              pName: value['product_name'],
+                              pPrice: value['product_price'],
+                              id: value['_id']['\$oid'].toString(),
+                              pDesc: value['product_desc'],
                               from: 'pending',
                             ),
                             const SizedBox(

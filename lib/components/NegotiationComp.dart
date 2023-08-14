@@ -5,8 +5,17 @@ class NegotiationComp extends StatefulWidget {
   final String? pName;
   final String? pPrice;
   final String? from;
-  const NegotiationComp(
-      {super.key, this.image, this.pName, this.pPrice, this.from});
+  final String? id;
+  final String? pDesc;
+  const NegotiationComp({
+    super.key,
+    this.image,
+    this.pName,
+    this.pPrice,
+    this.from,
+    required this.id,
+    required this.pDesc,
+  });
 
   @override
   State<NegotiationComp> createState() => _NegotiationCompState();
@@ -57,11 +66,11 @@ class _NegotiationCompState extends State<NegotiationComp> {
               } else if (widget.from == 'pending') {
                 Navigator.pushNamed(context, '/editProduct', arguments: {
                   'data': {
+                    'id': '${widget.id}',
                     'productPrice': '${widget.pPrice}',
                     'productName': '${widget.pName}',
                     'productImage': '${widget.image}',
-                    'productDescription':
-                        'this is a description that will tell you how nicen the product are and they are very nice. the thimg is just that i am not a very happy person i always look for something that makes me sad and i dont know why that is i hope that this ends soon i love you all',
+                    'productDescription': '${widget.pDesc}',
                   }
                 });
               }

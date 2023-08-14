@@ -34,17 +34,6 @@ class _ProductCompState extends State<ProductComp> {
       onTapUp: (details) {
         _handleTapUp();
       },
-      onTap: () {
-        Navigator.pushNamed(context, '/editProduct', arguments: {
-          'data': {
-            'productPrice': '${widget.pPrice}',
-            'productName': '${widget.pName}',
-            'productImage': '${widget.pImage}',
-            'productDescription':
-                'this is a description that will tell you how nicen the product are and they are very nice. the thimg is just that i am not a very happy person i always look for something that makes me sad and i dont know why that is i hope that this ends soon i love you all',
-          }
-        });
-      },
       child: AnimatedContainer(
         padding: const EdgeInsets.all(5.0),
         decoration:

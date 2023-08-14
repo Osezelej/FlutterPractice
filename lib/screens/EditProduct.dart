@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:agric_fresh_app/config.dart';
+import 'package:agric_fresh_app/main.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:dio/dio.dart';
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key});
+  final User_ appuser;
+  const ProductDetails({super.key, required this.appuser});
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -20,9 +25,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   late String _value;
   late String _price;
   late String _product_name;
+  late String _id;
   late Widget _animatedWidget;
   late Widget _animatedWidgetPrice;
   late Widget _animatedWidgetProduct;
+
+  final dio = Dio();
+
   int displayed = 0;
 
   @override
@@ -33,13 +42,82 @@ class _ProductDetailsState extends State<ProductDetails> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
+  updateData(User_ appuser, String productId, String productName,
+      String productDesc, String productPrice) async {
+    showDialog(
+        context: context,
+        builder: (builder) => AlertDialog(
+              elevation: 24,
+              backgroundColor: Colors.white,
+              content: SizedBox(
+                height: 100,
+                child: Row(
+                  children: [
+                    SpinKitDualRing(
+                      size: 30,
+                      lineWidth: 3.0,
+                      color: Color.fromARGB(255, 255, 175, 75),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('updating product details...')
+                  ],
+                ),
+              ),
+            ));
+    await Future.delayed(Duration(milliseconds: 1000));
+    try {
+      final Response response = await dio.post('$baseUrl/updateProduct', data: {
+        'email': appuser.email,
+        'id': productId,
+        'price': productPrice,
+        'product_name': productName,
+        'product_desc': productDesc
+      });
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        print(response.data);
+      } else {
+        Navigator.pop(context);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('error'),
+                content: Text(
+                  ('Sorry, an error occured while updating your product details, Please try again later.'),
+                ),
+              );
+            });
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('error'),
+              content: Text(
+                ('Sorry, an error occured while updating your product details, Please try again later.'),
+              ),
+            );
+          });
+    }
+  }
+
+  String? _new_price;
+  String? _new_product_name;
+  String? _new_value;
+
   @override
   Widget build(BuildContext context) {
     Map? data = ModalRoute.of(context)!.settings.arguments as Map;
-
+    final User_ appuser = widget.appuser;
     _price = data['data']['productPrice'];
     _product_name = data['data']['productName'];
     _value = data['data']['productDescription'];
+    _id = data['data']['id'];
 
     if (displayed == 0) {
       persistentProductDescription = data['data']['productDescription'];
@@ -221,7 +299,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                               10),
                                                     ),
                                                     child: Text(
-                                                      _product_name,
+                                                      _new_product_name ??
+                                                          _product_name,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.grey[400],
@@ -235,7 +314,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               autofocus: true,
                                               maxLines: 1,
                                               onChanged: (value) {
-                                                _product_name = value;
+                                                _new_product_name = value;
                                               },
                                               controller: TextEditingController(
                                                   text: _product_name),
@@ -332,7 +411,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                               10),
                                                     ),
                                                     child: Text(
-                                                      _price,
+                                                      _new_price ?? _price,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.grey[400],
@@ -346,7 +425,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               autofocus: true,
                                               maxLines: 1,
                                               onChanged: (value) {
-                                                _price = value;
+                                                _new_price = value;
                                               },
                                               controller: TextEditingController(
                                                   text: _price),
@@ -466,14 +545,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                               BorderRadius
                                                                   .circular(10),
                                                         ),
-                                                        child: Text(_value),
+                                                        child: Text(
+                                                            _new_value ??
+                                                                _value),
                                                       );
                                                     });
                                                   },
                                                   autofocus: true,
                                                   maxLines: 6,
                                                   onChanged: (value) {
-                                                    _value = value;
+                                                    _new_value = value;
                                                   },
                                                   controller:
                                                       TextEditingController(
@@ -521,7 +602,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                     vertical: 10,
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_new_price != null ||
+                          _new_product_name != null ||
+                          _new_value != null) {
+                        updateData(
+                            appuser,
+                            _id,
+                            _new_product_name ?? _product_name,
+                            _new_value ?? _value,
+                            _new_price ?? _price);
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: ((context) => AlertDialog(
+                                  title: Text('No change'),
+                                  content: Text(
+                                      'No changes were made to this product, make changes and try again'),
+                                )));
+                      }
+                    },
                     style: ButtonStyle(
                         elevation: MaterialStatePropertyAll(5),
                         backgroundColor: MaterialStatePropertyAll(

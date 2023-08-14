@@ -32,6 +32,8 @@ class Negotiation extends StatelessWidget {
                         pName: value['Name'],
                         pPrice: value['Price'],
                         from: 'negotiation',
+                        id: value['id'].toString(),
+                        pDesc: value['description'],
                       ),
                       const SizedBox(
                         height: 0,

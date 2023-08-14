@@ -162,7 +162,9 @@ class _HomeState extends State<Home> {
           case '/editProduct':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const ProductDetails(),
+                child: ProductDetails(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.bottomToTop,
                 settings: settings);
           case '/withdraw':
