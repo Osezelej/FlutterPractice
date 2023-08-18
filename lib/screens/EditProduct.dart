@@ -610,7 +610,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             appuser,
                             _id,
                             _new_product_name ?? _product_name,
-                            _new_value ?? _value,
+                            _new_value?.trim() ?? _value,
                             _new_price ?? _price);
                       } else {
                         showDialog(

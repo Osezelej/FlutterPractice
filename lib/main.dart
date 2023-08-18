@@ -156,7 +156,9 @@ class _HomeState extends State<Home> {
           case '/uploadedProduct':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const Product(),
+                child: Product(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/editProduct':

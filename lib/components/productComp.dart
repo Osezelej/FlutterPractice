@@ -1,11 +1,24 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class ProductComp extends StatefulWidget {
   final String? pImage;
   final String? pName;
   final String? pPrice;
+  final String numberSold;
+  final Function deleteProduct;
+  final String pId;
 
-  const ProductComp({super.key, this.pImage, this.pName, this.pPrice});
+  const ProductComp({
+    super.key,
+    this.pImage,
+    this.pName,
+    this.pPrice,
+    required this.pId,
+    required this.numberSold,
+    required this.deleteProduct,
+  });
 
   @override
   State<ProductComp> createState() => _ProductCompState();
@@ -13,8 +26,35 @@ class ProductComp extends StatefulWidget {
 
 class _ProductCompState extends State<ProductComp> {
   Color borderColor = const Color.fromARGB(255, 189, 189, 189);
+
   @override
   Widget build(BuildContext context) {
+    String numSold = widget.numberSold;
+
+    longpress() {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Warning'),
+                content: Text(
+                    'Are you sure you want to delete this product? note that once deleted it cannot be recorvered.'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('NO')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        widget.deleteProduct(widget.pId);
+                      },
+                      child: Text('YES')),
+                ],
+              ));
+    }
+
     void _handleTapDown() {
       setState(() {
         borderColor = const Color.fromARGB(255, 255, 175, 54);
@@ -28,6 +68,9 @@ class _ProductCompState extends State<ProductComp> {
     }
 
     return GestureDetector(
+      onLongPress: () {
+        longpress();
+      },
       onTapDown: (_) {
         _handleTapDown();
       },
@@ -72,8 +115,8 @@ class _ProductCompState extends State<ProductComp> {
                 const SizedBox(
                   width: 5,
                 ),
-                const Text(
-                  '10',
+                Text(
+                  numSold,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
