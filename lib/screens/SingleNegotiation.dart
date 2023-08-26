@@ -15,32 +15,6 @@ class _ProductChatState extends State<ProductChat>
   final itemCount = [
     {'name': 'Osezele Joseph', 'time': '7:50am', 'message': 'i have seen it'},
     {'name': 'John Doe', 'time': '7:50am', 'message': 'i have seen it'},
-    {
-      'name': 'Osemudiamen Samuel',
-      'time': '7:50am',
-      'message': 'i have seen it'
-    },
-    {'name': 'Ebosetale Sarah', 'time': '7:50am', 'message': 'i have seen it'},
-    {
-      'name': 'Omonivie Precious',
-      'time': '7:50am',
-      'message': 'i have seen it'
-    },
-    {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
-    {'name': 'Ebosetale Sarah', 'time': '7:50am', 'message': 'i have seen it'},
-    {
-      'name': 'Omonivie Precious',
-      'time': '7:50am',
-      'message': 'i have seen it'
-    },
-    {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
-    {'name': 'Ebosetale Sarah', 'time': '7:50am', 'message': 'i have seen it'},
-    {
-      'name': 'Omonivie Precious',
-      'time': '7:50am',
-      'message': 'i have seen it'
-    },
-    {'name': 'christy omelemen', 'time': '7:50am', 'message': 'i have seen it'},
   ];
 
   @override
