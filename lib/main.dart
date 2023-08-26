@@ -138,7 +138,9 @@ class _HomeState extends State<Home> {
           case '/Negotiation':
             return PageTransition(
                 duration: const Duration(milliseconds: 500),
-                child: const Negotiation(),
+                child: Negotiation(
+                  appuser: appUser,
+                ),
                 type: PageTransitionType.rightToLeft,
                 settings: settings);
           case '/product-chat':

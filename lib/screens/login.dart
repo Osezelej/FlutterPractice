@@ -174,33 +174,30 @@ class LoginIn extends StatelessWidget {
             SizedBox(
               height: 39,
             ),
-            Container(
-              child: TextField(
-                focusNode: FocusNode(),
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.name,
-                autofocus: true,
-                autofillHints: [AutofillHints.username],
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 131, 131, 131))),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 255, 175, 75))),
-                    labelText: 'Email',
-                    floatingLabelStyle: TextStyle(
-                      color: Color.fromARGB(255, 255, 175, 75),
-                    )),
-                onChanged: (value) {
-                  username = value;
-                },
-                onEditingComplete: () {
-                  _focusNodePassword.requestFocus();
-                },
-              ),
+            TextField(
+              focusNode: FocusNode(),textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.name,
+              autofocus: true,
+              autofillHints: [AutofillHints.username],
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 131, 131, 131))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: const Color.fromARGB(255, 255, 175, 75))),
+                  labelText: 'Email',
+                  floatingLabelStyle: TextStyle(
+                    color: Color.fromARGB(255, 255, 175, 75),
+                  )),
+              onChanged: (value) {
+                username = value;
+              },
+              onEditingComplete: () {
+                _focusNodePassword.requestFocus();
+              },
             ),
             SizedBox(
               height: 10,
