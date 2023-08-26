@@ -21,6 +21,7 @@ class _ProductState extends State<Product> {
   late User_ appuser;
 
   final Dio dio = Dio();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -120,7 +121,7 @@ class _ProductState extends State<Product> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text('Geting your product...')
+                    Text('Getting your product...')
                   ],
                 ),
               ),

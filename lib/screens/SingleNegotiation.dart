@@ -13,8 +13,18 @@ class _ProductChatState extends State<ProductChat>
   final GlobalKey<SliverAnimatedListState> _listkey = GlobalKey();
   final List<Widget> data_ = [];
   final itemCount = [
-    {'name': 'Osezele Joseph', 'time': '7:50am', 'message': 'i have seen it'},
-    {'name': 'John Doe', 'time': '7:50am', 'message': 'i have seen it'},
+    {
+      'name': 'Osezele Joseph',
+      'time': '7:50am',
+      'message': 'i have seen it',
+      'email': 'osezelejoseph@gmail.com'
+    },
+    {
+      'name': 'John Doe',
+      'time': '7:50am',
+      'message': 'i have seen it',
+      'email': '3osezelejoseph@gmail.com'
+    },
   ];
 
   @override
