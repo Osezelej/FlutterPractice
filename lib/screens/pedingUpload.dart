@@ -143,7 +143,8 @@ class _PendingUploadState extends State<PendingUpload> {
                             NegotiationComp(
                               image: value['product_photo_url'],
                               pName: value['product_name'],
-                              pPrice: value['product_price'],
+                              pMinPrice: value['min_product_price'],
+                              pMaxPrice: value['max_product_price'],
                               id: value['_id']['\$oid'].toString(),
                               pDesc: value['product_desc'],
                               from: 'pending',

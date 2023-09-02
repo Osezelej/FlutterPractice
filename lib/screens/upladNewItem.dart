@@ -23,7 +23,9 @@ class UploadProduct extends StatefulWidget {
 
 class _UploadProductState extends State<UploadProduct> {
   String productNameInput = '';
-  String priceInput = '';
+  String maxPriceInput = '';
+  String minPriceInput = '';
+  String noOfProduct = '';
   String descriptionInput = '';
   XFile? photo;
   final dio = Dio();
@@ -90,7 +92,7 @@ class _UploadProductState extends State<UploadProduct> {
           });
       return;
     }
-    if (priceInput.trim().isEmpty) {
+    if (minPriceInput.trim().isEmpty) {
       showDialog(
           context: context,
           builder: (context) {
@@ -167,9 +169,11 @@ class _UploadProductState extends State<UploadProduct> {
           'product_name': productNameInput.trim(),
           'product_desc': descriptionInput.trim(),
           'product_photo_url': '$ImagebaseUrl/$imageName',
-          'product_price': priceInput.trim(),
+          'min_product_price': minPriceInput.trim(),
+          'max_product_price': maxPriceInput.trim(),
           'farm_name': appuser.farmName.trim(),
           'owner_email': appuser.email.trim(),
+          'farmer_id': appuser.id.trim(),
         });
         if (response.statusCode == 200) {
           if (response.data != 0) {
@@ -273,7 +277,7 @@ class _UploadProductState extends State<UploadProduct> {
                     label: Text('Product name')),
               ),
               SizedBox(
-                height: 10,
+                height: 18,
               ),
               TextField(
                 controller: TextEditingController(text: descriptionInput),
@@ -295,7 +299,7 @@ class _UploadProductState extends State<UploadProduct> {
                     label: Text('Product Description')),
               ),
               SizedBox(
-                height: 10,
+                height: 18,
               ),
               DottedBorder(
                   strokeWidth: 1.5,
@@ -323,12 +327,12 @@ class _UploadProductState extends State<UploadProduct> {
                     ),
                   )),
               SizedBox(
-                height: 10,
+                height: 18,
               ),
               TextField(
-                controller: TextEditingController(text: priceInput),
+                controller: TextEditingController(text: noOfProduct),
                 onChanged: (value) {
-                  priceInput = value;
+                  noOfProduct = value;
                 },
                 maxLines: 1,
                 decoration: InputDecoration(
@@ -339,10 +343,62 @@ class _UploadProductState extends State<UploadProduct> {
                         color: Color.fromARGB(255, 255, 175, 54),
                       ),
                     ),
-                    hintText: 'Product Price',
+                    hintText: 'Number of item in stock',
                     border: OutlineInputBorder(borderSide: BorderSide()),
-                    label: Text('Product Price')),
+                    label: Text('Number of item')),
               ),
+              SizedBox(
+                height: 18,
+              ),
+              Text('Price Range'),
+              SizedBox(
+                height: 5,
+              ),
+              Row(children: [
+                Expanded(
+                  child: TextField(
+                    controller: TextEditingController(text: minPriceInput),
+                    onChanged: (value) {
+                      minPriceInput = value;
+                    },
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        floatingLabelStyle:
+                            TextStyle(color: Color.fromARGB(255, 255, 175, 54)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 175, 54),
+                          ),
+                        ),
+                        hintText: 'Minimum going Price',
+                        border: OutlineInputBorder(borderSide: BorderSide()),
+                        label: Text('Minimum Price')),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: TextEditingController(text: maxPriceInput),
+                    onChanged: (value) {
+                      maxPriceInput = value;
+                    },
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        floatingLabelStyle:
+                            TextStyle(color: Color.fromARGB(255, 255, 175, 54)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 175, 54),
+                          ),
+                        ),
+                        hintText: 'Maximun going Price',
+                        border: OutlineInputBorder(borderSide: BorderSide()),
+                        label: Text('Miximum Price')),
+                  ),
+                ),
+              ]),
               SizedBox(
                 height: 30,
               ),

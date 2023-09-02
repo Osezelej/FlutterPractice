@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:agric_fresh_app/config.dart';
 import 'package:flutter/material.dart';
 import 'package:agric_fresh_app/components/NegotiationComp.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 import 'package:agric_fresh_app/main.dart';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,16 +28,6 @@ class _NegotiationState extends State<Negotiation> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       fetchData(context, appuser);
-      var socket = IO.io(socketUrl);
-      socket.auth = {'email': appuser.id, 'name': appuser.farmName};
-      socket.on('hello', (data) => print(data));
-      socket.emit("unsentMessages", 'data sent');
-      socket.emit('done', 'delete message');
-      socket.on("sentMessage", (data) => print(data));
-
-      socket.on('private_message', (data) => print(data));
-
-      await Future.delayed(Duration(milliseconds: 5000), () {});
     });
   }
 
@@ -160,7 +148,7 @@ class _NegotiationState extends State<Negotiation> {
                                 NegotiationComp(
                                   image: value['product_photo_url'],
                                   pName: value['product_name'],
-                                  pPrice: value['product_price'],
+                                  pMinPrice: value['product_price'],
                                   id: value['_id']['\$oid'].toString(),
                                   pDesc: value['product_desc'],
                                   from: 'negotiation',

@@ -18,12 +18,15 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   late Map data_;
   late final String persistentProductName;
-  late final String persistentProductPrice;
+  late final String persistentminProductPrice;
   late final String persistentProductDescription;
+  late final String persistentMaxProductPrice;
+  final FocusNode maxPricenode = FocusNode();
 
   Color iconColor = Colors.black38;
   late String _value;
-  late String _price;
+  late String _minprice;
+  late String _maxPrice;
   late String _product_name;
   late String _id;
   late Widget _animatedWidget;
@@ -42,8 +45,13 @@ class _ProductDetailsState extends State<ProductDetails> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
-  updateData(User_ appuser, String productId, String productName,
-      String productDesc, String productPrice) async {
+  updateData(
+      User_ appuser,
+      String productId,
+      String productName,
+      String productDesc,
+      String minproductPrice,
+      String maxproductPrice) async {
     showDialog(
         context: context,
         builder: (builder) => AlertDialog(
@@ -71,7 +79,8 @@ class _ProductDetailsState extends State<ProductDetails> {
       final Response response = await dio.post('$baseUrl/updateProduct', data: {
         'email': appuser.email,
         'id': productId,
-        'price': productPrice,
+        'minPrice': minproductPrice,
+        'maxPrice': maxproductPrice,
         'product_name': productName,
         'product_desc': productDesc
       });
@@ -106,15 +115,17 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
   }
 
-  String? _new_price;
-  String? _new_product_name;
-  String? _new_value;
+  String? newMinPrice;
+  String? newMaxPrice;
+  String? newProductName;
+  String? newValue;
 
   @override
   Widget build(BuildContext context) {
     Map? data = ModalRoute.of(context)!.settings.arguments as Map;
     final User_ appuser = widget.appuser;
-    _price = data['data']['productPrice'];
+    _minprice = data['data']['min_productPrice'];
+    _maxPrice = data['data']['max_productPrice'];
     _product_name = data['data']['productName'];
     _value = data['data']['productDescription'];
     _id = data['data']['id'];
@@ -122,7 +133,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     if (displayed == 0) {
       persistentProductDescription = data['data']['productDescription'];
       persistentProductName = data['data']['productName'];
-      persistentProductPrice = data['data']['productPrice'];
+      persistentminProductPrice = data['data']['min_productPrice'];
+      persistentMaxProductPrice = data['data']['max_productPrice'];
       _animatedWidget = Container(
         key: GlobalKey(),
         padding: EdgeInsets.all(5),
@@ -144,7 +156,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
-          _price,
+          '$_minprice - $_maxPrice',
           style: TextStyle(
               color: Colors.grey[400],
               fontSize: 15,
@@ -299,7 +311,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                               10),
                                                     ),
                                                     child: Text(
-                                                      _new_product_name ??
+                                                      newProductName ??
                                                           _product_name,
                                                       style: TextStyle(
                                                           color:
@@ -314,7 +326,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               autofocus: true,
                                               maxLines: 1,
                                               onChanged: (value) {
-                                                _new_product_name = value;
+                                                newProductName = value;
                                               },
                                               controller: TextEditingController(
                                                   text: _product_name),
@@ -346,7 +358,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Row(
                                 children: [
                                   Text(
-                                    'Price',
+                                    'Price Range',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 15,
@@ -367,68 +379,161 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         setState(() {
                                           _animatedWidgetPrice = Container(
                                             key: GlobalKey(),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                  labelText: 'Price',
-                                                  floatingLabelStyle: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 255, 175, 74)),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          borderSide:
-                                                              BorderSide(
-                                                            width: 1.5,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    175,
-                                                                    74),
-                                                          )),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      borderSide: BorderSide(
-                                                        width: 1.5,
-                                                        color: Color.fromARGB(
-                                                            255, 182, 182, 182),
-                                                      ))),
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              onEditingComplete: () {
-                                                setState(() {
-                                                  _animatedWidgetPrice =
-                                                      Container(
-                                                    key: GlobalKey(),
-                                                    padding: EdgeInsets.all(5),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Text(
-                                                      _new_price ?? _price,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.grey[400],
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w900),
-                                                    ),
-                                                  );
-                                                });
-                                              },
-                                              autofocus: true,
-                                              maxLines: 1,
-                                              onChanged: (value) {
-                                                _new_price = value;
-                                              },
-                                              controller: TextEditingController(
-                                                  text: _price),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextField(
+                                                    decoration: InputDecoration(
+                                                        labelText:
+                                                            'Minimum Price',
+                                                        floatingLabelStyle:
+                                                            TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        175,
+                                                                        74)),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  width: 1.5,
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          175,
+                                                                          74),
+                                                                )),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  width: 1.5,
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          182,
+                                                                          182,
+                                                                          182),
+                                                                ))),
+                                                    textInputAction:
+                                                        TextInputAction.done,
+                                                    onEditingComplete: () {
+                                                      maxPricenode
+                                                          .requestFocus();
+                                                    },
+                                                    autofocus: true,
+                                                    maxLines: 1,
+                                                    onChanged: (value) {
+                                                      newMinPrice = value;
+                                                    },
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: _minprice),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text('-'),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Expanded(
+                                                  child: TextField(
+                                                    decoration: InputDecoration(
+                                                        labelText:
+                                                            'Maximum Price',
+                                                        floatingLabelStyle:
+                                                            TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        175,
+                                                                        74)),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  width: 1.5,
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          175,
+                                                                          74),
+                                                                )),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                  width: 1.5,
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          182,
+                                                                          182,
+                                                                          182),
+                                                                ))),
+                                                    textInputAction:
+                                                        TextInputAction.done,
+                                                    onEditingComplete: () {
+                                                      setState(() {
+                                                        _animatedWidgetPrice =
+                                                            Container(
+                                                          key: GlobalKey(),
+                                                          padding:
+                                                              EdgeInsets.all(5),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Text(
+                                                            '${newMinPrice ?? _minprice}- ${newMaxPrice ?? _maxPrice}',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[400],
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w900),
+                                                          ),
+                                                        );
+                                                      });
+                                                    },
+                                                    autofocus: true,
+                                                    maxLines: 1,
+                                                    onChanged: (value) {
+                                                      newMaxPrice = value;
+                                                    },
+                                                    controller:
+                                                        TextEditingController(
+                                                            text: _maxPrice),
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           );
                                         });
@@ -546,15 +651,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                                   .circular(10),
                                                         ),
                                                         child: Text(
-                                                            _new_value ??
-                                                                _value),
+                                                            newValue ?? _value),
                                                       );
                                                     });
                                                   },
                                                   autofocus: true,
                                                   maxLines: 6,
                                                   onChanged: (value) {
-                                                    _new_value = value;
+                                                    newValue = value;
                                                   },
                                                   controller:
                                                       TextEditingController(
@@ -603,15 +707,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      if (_new_price != null ||
-                          _new_product_name != null ||
-                          _new_value != null) {
+                      if (newMinPrice != null ||
+                          newMaxPrice != null ||
+                          newProductName != null ||
+                          newValue != null) {
                         updateData(
                             appuser,
                             _id,
-                            _new_product_name ?? _product_name,
-                            _new_value?.trim() ?? _value,
-                            _new_price ?? _price);
+                            newProductName ?? _product_name,
+                            newValue?.trim() ?? _value,
+                            newMinPrice ?? _minprice,
+                            newMaxPrice ?? _maxPrice);
                       } else {
                         showDialog(
                             context: context,

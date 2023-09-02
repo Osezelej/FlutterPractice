@@ -8,6 +8,7 @@ import 'package:agric_fresh_app/config.dart';
 import 'package:flutter_solidart/flutter_solidart.dart';
 import 'package:solidart/solidart.dart';
 import 'package:dio/dio.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class TransactionHistory extends StatefulWidget {
   final User_ appuser;
@@ -24,6 +25,26 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   late final Resource trxData;
   final Dio dio = Dio();
   bool isEmpty = false;
+  late User_ appuser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var socket = IO.io(socketUrl);
+      socket.auth = {'email': appuser.id, 'name': appuser.farmName};
+      socket.on('hello', (data) => print(data));
+      socket.emit("unsentMessages", 'data sent');
+      socket.emit('done', 'delete message');
+      socket.on("sentMessage", (data) {});
+
+      socket.on('private_message', (data) => print(data));
+
+      await Future.delayed(Duration(milliseconds: 5000), () {});
+    });
+  }
+
   fetchData(User_ appuser, BuildContext context, StateSetter setState) async {
     var response = await dio.get('$baseUrl/transactions',
         queryParameters: {'email': appuser.email});
@@ -75,7 +96,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final User_ appuser = widget.appuser;
+    appuser = widget.appuser;
     if (i == 0) {
       fetchData(appuser, context, setState);
     }
@@ -111,30 +132,36 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 Column(
                   children: [
                     DrawerItem(
-                      leading: Icon(Icons.file_upload_rounded),
+                      leading: Icon(
+                        Icons.file_upload_rounded,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       text: 'Upload Product',
                       url: '/upload product',
                     ),
                     DrawerItem(
-                        leading: Icon(Icons.wallet_rounded),
+                        leading: Icon(
+                          Icons.wallet_rounded,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
                         trailing: Icon(Icons.arrow_forward_ios_rounded),
                         text: 'Withdraw funds',
                         url: '/withdraw'),
                     DrawerItem(
-                      leading: Icon(Icons.chat_bubble_rounded),
-                      trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      text: 'Negotiations',
-                      url: '/Negotiation',
-                    ),
-                    DrawerItem(
-                      leading: Icon(Icons.pending),
+                      leading: Icon(
+                        Icons.pending,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       text: 'Pending uploads',
                       url: '/pendingUpload',
                     ),
                     DrawerItem(
-                        leading: Icon(Icons.shopping_bag),
+                        leading: Icon(
+                          Icons.shopping_bag,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
                         trailing: Icon(Icons.arrow_forward_ios_rounded),
                         text: 'Products',
                         url: '/uploadedProduct'),
@@ -145,18 +172,27 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                     DrawerItem(
                         text: 'Profile',
                         trailing: Icon(Icons.arrow_forward_ios_rounded),
-                        leading: Icon(Icons.supervised_user_circle_rounded),
+                        leading: Icon(
+                          Icons.supervised_user_circle_rounded,
+                          color: Color.fromARGB(255, 255, 175, 75),
+                        ),
                         url: '/profile'),
                     DrawerItem(
                       text: 'Help - Contact Us',
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      leading: Icon(Icons.help_center),
+                      leading: Icon(
+                        Icons.help_center,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
                       url: '/help',
                     ),
                     DrawerItem(
                       text: 'Logout',
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      leading: Icon(Icons.logout),
+                      leading: Icon(
+                        Icons.logout,
+                        color: Color.fromARGB(255, 255, 175, 75),
+                      ),
                     )
                   ],
                 )

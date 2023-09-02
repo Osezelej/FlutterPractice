@@ -175,7 +175,8 @@ class LoginIn extends StatelessWidget {
               height: 39,
             ),
             TextField(
-              focusNode: FocusNode(),textInputAction: TextInputAction.done,
+              focusNode: FocusNode(),
+              textInputAction: TextInputAction.done,
               keyboardType: TextInputType.name,
               autofocus: true,
               autofillHints: [AutofillHints.username],

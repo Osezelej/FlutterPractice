@@ -16,6 +16,7 @@ import 'package:agric_fresh_app/screens/Chat.dart';
 import 'package:agric_fresh_app/screens/product.dart';
 import 'package:agric_fresh_app/screens/login.dart';
 import 'package:agric_fresh_app/screens/ForgotPass.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'config.dart';
 
@@ -63,6 +64,8 @@ class User_ {
       required this.bankName,
       required this.acctNumber,
       required this.transactionData});
+
+  void connectUser(Socket IO) {}
 }
 
 class _HomeState extends State<Home> {

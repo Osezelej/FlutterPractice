@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class NegotiationComp extends StatefulWidget {
   final String? image;
   final String? pName;
-  final String? pPrice;
+  final String? pMinPrice;
+  final String? pMaxPrice;
   final String? from;
   final String? id;
   final String? pDesc;
@@ -11,7 +12,8 @@ class NegotiationComp extends StatefulWidget {
     super.key,
     this.image,
     this.pName,
-    this.pPrice,
+    this.pMinPrice,
+    this.pMaxPrice,
     this.from,
     required this.id,
     required this.pDesc,
@@ -70,7 +72,8 @@ class _NegotiationCompState extends State<NegotiationComp> {
                     Navigator.pushNamed(context, '/editProduct', arguments: {
                       'data': {
                         'id': '${widget.id}',
-                        'productPrice': '${widget.pPrice}',
+                        'min_productPrice': '${widget.pMinPrice}',
+                        'max_productPrice': '${widget.pMaxPrice}',
                         'productName': '${widget.pName}',
                         'productImage': '${widget.image}',
                         'productDescription': '${widget.pDesc}',
@@ -97,7 +100,7 @@ class _NegotiationCompState extends State<NegotiationComp> {
                       fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  widget.pPrice ?? '',
+                  '${widget.pMinPrice} - ${widget.pMaxPrice}',
                   style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
